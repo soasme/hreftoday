@@ -1,0 +1,10 @@
+{% extends "web/layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>{{ link.title }}</h1>
+<p><a href="{{ url_for('web.get_issue', id=link.issue_id) }}">No. {{ issue.serial }}</a></p>
+<p><a href="{{ link.url }}">Read more</a></p>
+<p>{{ link.summary }}</p>
+{% endblock %}

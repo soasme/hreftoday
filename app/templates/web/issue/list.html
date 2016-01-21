@@ -1,0 +1,16 @@
+{% extends "web/layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Issue List{% endblock %}
+
+{% block content %}
+{{ wtf.quick_form(add_issue_form) }}
+<ul>
+  {% for issue in pagination.items %}
+  <li>
+    <a href="{{ url_for('web.get_issue', id=issue.id) }}"> No. {{issue.serial}} </a>
+  </li>
+  {% endfor %}
+</ul>
+{{ pagination.info }}
+{% endblock %}

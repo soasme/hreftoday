@@ -1,0 +1,23 @@
+{% extends "web/layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if not issue.serial %}
+{{ wtf.quick_form(publish_issue_form, action=url_for('web.publish_issue', id=issue.id)) }}
+{% endif %}
+{% if links | length < 5 %}
+<a href="{{ url_for('web.add_issue_link', id=issue.id) }}">Add Link</a>
+{% endif %}
+
+<ul>
+{% for link in links %}
+  <li>
+    <a href="{{ url_for('web.get_link', id=link.id) }}">{{ link.title }}</a>
+    <p>{{ link.summary }}</p>
+  </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "web/layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <ul>
+  {% for topic in pagination.items %}
+  <li>
+    <a href="{{ url_for('web.get_topic_issues', id=topic.id) }}"> {{topic.title}} </a>
+  </li>
+  {% endfor %}
+  </ul>
+  {{ pagination.info }}
+{% endblock %}
