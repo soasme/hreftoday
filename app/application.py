@@ -4,6 +4,7 @@ from flask import Flask
 from flask_nav.elements import Navbar, View
 from flask_user import SQLAlchemyAdapter
 from flask_appconfig import AppConfig
+from flask_appconfig.env import from_envvars
 from app.core import db, nav, bootstrap, user_manager, login_manager, mail
 from app.views import web
 from app.models import User
