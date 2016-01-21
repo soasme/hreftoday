@@ -12,6 +12,7 @@ flask-nav==0.5
 Flask-SQLAlchemy==2.1
 Flask-User==0.6.8
 Flask-WTF==0.12
+gunicorn==19.4.5
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
