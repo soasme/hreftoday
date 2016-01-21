@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from app.application import create_app
+from flask_script import Manager
 
 app = create_app()
+manager = Manager(app)
 
-if __name__ == '__main__':
-    app.run()
+@manager.command
+def collectstatic():
+    print "hello world"
+
+
+if __name__ == "__main__":
+    manager.run()
