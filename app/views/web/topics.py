@@ -3,31 +3,45 @@
 from flask import url_for, redirect, render_template
 from flask_login import current_user, login_required
 from sqlalchemy.exc import IntegrityError
-from app.utils.forms import form_required, populate_obj
+from app.utils.forms import save_form_obj
+from app.utils.view import templated, ensure_resource
+from app.utils.transaction import transaction
 from app.models import Topic, TopicFollow
 from app.forms import TopicForm
 from app.core import db
 from .core import bp
 
 @bp.route('/topics', defaults={'page': 1})
+@templated('web/topic/list.html')
 def get_topics(page):
-    pagination = Topic.query.filter_by(user_id=current_user.id).paginate(page)
-    return render_template('web/topic/list.html', pagination=pagination)
+    return dict(
+        pagination=Topic.query.filter_by(user_id=current_user.id).paginate(page),
+    )
 
-@bp.route('/topics/add')
-def add_topic_page():
-    return render_template('web/topic/add.html', form=TopicForm())
-
-@bp.route('/topics/add', methods=['POST'])
-@form_required(TopicForm)
+@bp.route('/topics/add', methods=['GET', 'POST'])
+@transaction(db)
+@login_required
+@templated('web/topic/add.html')
 def add_topic():
     topic = Topic(user_id=current_user.id)
-    return _save_topic(topic)
+    return save_form_obj(
+        db, TopicForm, topic,
+        build_next=lambda form, topic: url_for('web.get_topic_issues', id=topic.id),
+    )
 
-@bp.route('/topics/<int:id>/update')
-def update_topic_page(id):
-    topic = Topic.query.get_or_404(id)
-    return render_template('web/topic/update.html', topic=topic, form=TopicForm(obj=topic))
+@bp.route('/topics/<int:id>/update', methods=['GET', 'POST'])
+@transaction(db)
+@login_required
+@templated('web/topic/update.html')
+@ensure_resource(Topic)
+def update_topic(id, topic):
+    return save_form_obj(
+        db,
+        TopicForm,
+        obj=topic,
+        build_next=lambda form, topic: url_for('web.get_topic_issues', id=id),
+        before_render_map=['obj->topic'],
+    )
 
 @bp.route('/topics/<int:id>/follow')
 @login_required
@@ -40,13 +54,3 @@ def follow_topic(id):
     except IntegrityError:
         db.session.rollback()
     return redirect(url_for('web.get_topic', id=topic.id))
-
-@bp.route('/topics/<int:id>/update', methods=['POST'])
-@form_required(TopicForm)
-def update_topic(id):
-    topic = Topic.query.get_or_404(id)
-    return _save_topic(topic)
-
-def _save_topic(topic):
-    populate_obj(topic)
-    return redirect(url_for('web.get_topic_issues', id=topic.id))
