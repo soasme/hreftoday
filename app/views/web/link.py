@@ -31,7 +31,8 @@ def add_issue_link(id):
 @bp.route('/links/<int:id>/update')
 def update_link_page(id):
     link = Link.query.get_or_404(id)
-    return render_template('web/link/update.html', link=link)
+    form = EditLinkForm(obj=link)
+    return render_template('web/link/update.html', link=link, form=form)
 
 @bp.route('/links/<int:id>/update', methods=['POST'])
 @form_required(EditLinkForm)
