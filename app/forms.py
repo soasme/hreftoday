@@ -18,12 +18,12 @@ class DataExisted(object):
 class EditLinkForm(Form):
     title = StringField('title', validators=[DataRequired(), Length(max=100)])
     url = StringField('url', validators=[DataRequired(), Length(max=1024)])
-    summary = TextAreaField('summary', validators=[DataRequired(), Length(max=100)])
+    summary = TextAreaField('summary', validators=[DataRequired(), Length(min=100, max=2000)])
     submit = SubmitField('Save')
 
 class AddLinkForm(EditLinkForm):
     issue_id = HiddenField('issue_id', validators=[DataRequired(), DataExisted(Issue)])
-    submit = SubmitField('Save')
+
 
 class TopicForm(Form):
     title = StringField('title', validators=[DataRequired(), Length(max=128)])
