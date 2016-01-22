@@ -8,6 +8,7 @@ from flask_appconfig.env import from_envvars
 from app.core import db, nav, bootstrap, user_manager, login_manager, mail
 from app.views import web
 from app.models import User
+from app.consts import NAV_VIEWS
 
 def create_app(config_file=None):
     app = Flask('app')
@@ -21,7 +22,7 @@ def create_app(config_file=None):
     bootstrap.init_app(app)
 
     nav.app = app
-    nav.register_element('top', Navbar('', View('Home', 'web.index')))
+    nav.register_element('top', Navbar('', *[View(*view) for view in NAV_VIEWS]))
     nav.init_app(app)
 
     login_manager.app = app
