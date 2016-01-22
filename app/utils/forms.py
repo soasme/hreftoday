@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import _app_ctx_stack as stack, abort
+from flask import _app_ctx_stack as stack, abort, redirect, url_for
 from functools import wraps
 from werkzeug.local import LocalProxy
 
@@ -48,3 +48,33 @@ def populate_obj(obj):
         current_form.populate_obj(obj)
     db.session.add(obj)
     db.session.commit()
+
+def save_form_obj(db,
+                  form_class,
+                  obj,
+                  build_next,
+                  before_populate=None,
+                  after_populate=None,
+                  before_render=None,
+                  before_render_map=None):
+    form = form_class(obj=obj)
+    if form.validate_on_submit():
+        if before_populate:
+            before_populate(form)
+        form.populate_obj(obj)
+        db.session.add(obj)
+        db.session.commit()
+        if after_populate:
+            after_populate(form)
+        return redirect(build_next(form, obj))
+    data = dict(
+        form=form,
+        obj=obj,
+    )
+    if before_render:
+        return before_render(data)
+    if before_render_map:
+        for transition in before_render_map:
+            from_, to_ = [_.strip() for _ in transition.split('->')]
+            data[to_] = data.pop(from_, None)
+    return data
