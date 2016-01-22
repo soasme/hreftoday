@@ -35,3 +35,6 @@ class AddIssueForm(Form):
 
 class PublishIssueForm(Form):
     submit = SubmitField('Publish Issue')
+
+class FollowTopicForm(Form):
+    submit = SubmitField('Follow Topic')
