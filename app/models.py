@@ -16,6 +16,16 @@ class Topic(db.Model):
     description = db.Column(db.Text, nullable=False, default='')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class TopicFollow(db.Model):
+    __tablename__ = 'topic_follow'
+    __table_args__ = (
+        db.UniqueConstraint('topic_id', 'user_id', name='ux_user_follow_topic'),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    topic_id = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
 class Issue(db.Model):
     __tablename__ = 'issue'
     __table_args__ = (
