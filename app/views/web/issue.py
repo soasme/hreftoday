@@ -2,30 +2,40 @@
 
 from flask import render_template, url_for, redirect, request, abort
 from flask_login import login_required, current_user
-from app.models import Issue, Link, LinkTag, Tag
-from app.utils.forms import populate_obj, form_required
+from app.models import Issue, Link, LinkTag, Tag, Topic
+from app.utils.forms import populate_obj, form_required, save_form_obj
+from app.utils.transaction import transaction
+from app.utils.view import templated, ensure_resource
 from app.forms import TopicForm, AddIssueForm, PublishIssueForm, AddLinkForm
 from app.core import db
 from .core import bp
 
 @bp.route('/topics/<int:id>/issues', defaults={'page': 1})
-def get_topic_issues(id, page):
+@templated('web/issue/list.html')
+@ensure_resource(Topic)
+def get_topic_issues(id, page, topic):
     is_published = request.args.get('is_published', type=int, default=1)
     if is_published:
-        pagination = Issue.query.filter_by(topic_id=id).filter(Issue.serial != None).paginate(page)
+        pagination = Issue.query.filter(Issue.topic_id==id, Issue.serial!=None).paginate(page)
     else:
-        pagination = Issue.query.filter_by(topic_id=id, serial=None).paginate(page)
+        pagination = Issue.query.filter_by(topic_id=topic.id, serial=None).paginate(page)
     add_issue_form = AddIssueForm()
-    return render_template(
-        'web/issue/list.html', pagination=pagination, add_issue_form=add_issue_form,
+    return dict(
+        pagination=pagination,
+        add_issue_form=add_issue_form,
+        topic=topic,
     )
 
-@bp.route('/topics/<int:id>/issues', methods=['POST'])
+@bp.route('/topics/<int:id>/issues/add', methods=['POST'])
+@transaction(db)
 @login_required
-@form_required(AddIssueForm)
-def add_issue(id):
-    issue = Issue(user_id=current_user.id, topic_id=id)
-    return _save_issue(issue)
+@ensure_resource(Topic)
+def add_issue(id, topic):
+    issue = Issue(user_id=current_user.id, topic_id=topic.id)
+    return save_form_obj(
+        db, AddIssueForm, issue,
+        build_next=lambda form, issue: url_for('web.get_topic_issues', id=topic.id),
+    )
 
 @bp.route('/issues/<int:id>')
 def get_issue(id):

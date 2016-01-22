@@ -4,7 +4,7 @@
 {% block title %}Issue List{% endblock %}
 
 {% block content %}
-{{ wtf.quick_form(add_issue_form) }}
+{{ wtf.quick_form(add_issue_form, action=url_for('web.add_issue', id=topic.id)) }}
 <ul>
   {% for issue in pagination.items %}
   <li>
