@@ -109,3 +109,4 @@ venv/
 target/
 
 app/.env
+app/*.db
