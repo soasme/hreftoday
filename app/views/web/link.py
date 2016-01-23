@@ -4,8 +4,8 @@ from flask import render_template, url_for, redirect
 from flask_login import current_user
 from flask_wtf import Form
 from app.models import Link, Tag, LinkTag, Issue
-from app.forms import AddLinkForm, EditLinkForm
 from app.utils.forms import form_required, populate_obj
+from app.forms import LinkForm
 from .core import bp
 
 @bp.route('/links/<int:id>')

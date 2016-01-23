@@ -6,7 +6,7 @@ from app.models import Issue, Link, LinkTag, Tag, Topic
 from app.utils.forms import populate_obj, form_required, save_form_obj
 from app.utils.transaction import transaction
 from app.utils.view import templated, ensure_resource
-from app.forms import TopicForm, AddIssueForm, PublishIssueForm, AddLinkForm
+from app.forms import TopicForm, AddIssueForm, PublishIssueForm, LinkForm
 from app.core import db
 from .core import bp
 
