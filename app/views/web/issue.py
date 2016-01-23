@@ -19,8 +19,11 @@ def get_topic_issues(id, page, topic):
         pagination = Issue.query.filter(Issue.topic_id==id, Issue.serial!=None).paginate(page)
     else:
         pagination = Issue.query.filter_by(topic_id=topic.id, serial=None).paginate(page)
+    for issue in pagination.items:
+        issue.links = Link.query.filter_by(issue_id=issue.id).order_by(Link.created_at.desc()).all()
     add_issue_form = AddIssueForm()
     return dict(
+        is_published=is_published,
         pagination=pagination,
         add_issue_form=add_issue_form,
         topic=topic,

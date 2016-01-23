@@ -1,16 +1,51 @@
 {% extends "web/layout.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "web/utils.html" as utils %}
 
 {% block title %}Issue List{% endblock %}
 
 {% block content %}
-{{ wtf.quick_form(add_issue_form, action=url_for('web.add_issue', id=topic.id)) }}
-<ul>
-  {% for issue in pagination.items %}
-  <li>
-    <a href="{{ url_for('web.get_issue', id=issue.id) }}"> No. {{issue.serial}} </a>
-  </li>
-  {% endfor %}
-</ul>
-{{ pagination.info }}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      {% if current_user.id == topic.user_id %}
+      <div class="row">
+        <div class="pull-left">
+          <div class="btn-group">
+            {{ utils.btn_group_filter('is_published', is_published | int, 1, 'Published') }}
+            {{ utils.btn_group_filter('is_published', is_published | int, 0, 'Unpublished') }}
+          </div>
+        </div>
+        <div class="pull-right">
+          {{ wtf.quick_form(add_issue_form, action=url_for('web.add_issue', id=topic.id)) }}
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      {% endif %}
+      <div class="row">
+        {% for issue in pagination.items %}
+        <div class="col-lg-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <a href="{{ url_for('web.get_issue', id=issue.id) }}">
+                No. {{issue.serial}}
+              </a>
+            </div>
+            <ul class="list-group">
+              {% for link in issue.links %}
+              <li class="list-group-item">
+                <a href="{{ url_for('web.get_link', id=link.id) }}">
+                  {{ link.title }}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+        {{ pagination.info }}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

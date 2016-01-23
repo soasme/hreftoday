@@ -19,8 +19,9 @@
       </div>
       <div class="panel pannel-primary">
         <div class="panel-heading">
-          {% if issue.published_at %}
-          <h1>{{ issue.published_at }} No. {{ issue.serial }}</h1>
+          {% if issue.serial  %}
+          <h1>{{ issue.topic.title }} No. {{ issue.serial }}</h1>
+          <small>Published at {{ issue.published_at | dateformat }}</small>
           {% else %}
           <h1 style="unpublished-issue">Unpublished Issue</h1>
           {% endif %}

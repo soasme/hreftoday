@@ -9,6 +9,7 @@ from app.core import db, nav, bootstrap, user_manager, login_manager, mail
 from app.views import web
 from app.models import User
 from app.consts import NAV_VIEWS
+from app.utils.filters import FILTERS
 
 def create_app(config_file=None):
     app = Flask('app')
@@ -33,4 +34,7 @@ def create_app(config_file=None):
 
     user_manager.init_app(app, db_adapter=SQLAlchemyAdapter(db, User), login_manager=login_manager)
     app.register_blueprint(web.bp)
+
+    for jinja_filter in FILTERS:
+        app.jinja_env.filters[jinja_filter] = FILTERS[jinja_filter]
     return app

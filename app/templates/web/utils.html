@@ -1,0 +1,4 @@
+{% macro btn_group_filter(variable_key, variable_value, filter_value, text) %}
+<a class="btn btn-default {% if variable_value == filter_value %}btn-primary{% endif %}"
+  href="?{{ variable_key }}={{ filter_value }}">{{ text }}</a>
+{% endmacro %}

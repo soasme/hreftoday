@@ -54,6 +54,7 @@ class Link(db.Model):
     url = db.Column(db.String(1024), nullable=False)
     cover = db.Column(db.String(128))
     summary = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     @property
     def domain(self):
         return urlparse(self.url).hostname
