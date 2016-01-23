@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from functools import wraps
-from flask import render_template, current_app, request, url_for, redirect, g
+from flask import render_template, current_app, request, url_for, redirect, g, abort
+from flask_login import current_user
 from werkzeug import BaseResponse
 
 def ensure_resource(Model):
@@ -16,6 +17,10 @@ def ensure_resource(Model):
             return f(*args, **kwargs)
         return decorated_function
     return decorator
+
+def ensure_owner(model):
+    if not model.user_id == current_user.id:
+        abort(403)
 
 def redirect_to(endpoint, **kwargs):
     return redirect(url_for(endpoint, **kwargs))
