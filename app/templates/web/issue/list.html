@@ -7,28 +7,41 @@
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-lg-12">
-      {% if current_user.id == topic.user_id %}
-      <div class="row">
-        <div class="pull-left">
-          <div class="btn-group">
-            {{ utils.btn_group_filter('is_published', is_published | int, 1, 'Published') }}
-            {{ utils.btn_group_filter('is_published', is_published | int, 0, 'Unpublished') }}
-          </div>
-        </div>
-        <div class="pull-right">
-          {{ wtf.quick_form(add_issue_form, action=url_for('web.add_issue', id=topic.id)) }}
-        </div>
-        <div class="clearfix"></div>
+    <h3>
+      <span>{{ topic.title }}</span>
+      <div class="pull-right">
+        <a class="btn btn-default">Subscribe</a>
       </div>
-      {% endif %}
+    </h3>
+    <p>{{ topic.description }}</p>
+  </div>
+  {% if current_user.id == topic.user_id %}
+  <div class="row">
+    <div class="navbar">
+        <div class="btn-group">
+          {{ utils.btn_group_filter('is_published', is_published | int, 1, 'Published') }}
+          {{ utils.btn_group_filter('is_published', is_published | int, 0, 'Unpublished') }}
+        </div>
+      <div class="pull-right">
+        {{ wtf.quick_form(add_issue_form, action=url_for('web.add_issue', id=topic.id)) }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-lg-12">
+
       <div class="row">
         {% for issue in pagination.items %}
         <div class="col-lg-4">
           <div class="panel panel-default">
             <div class="panel-heading">
               <a href="{{ url_for('web.get_issue', id=issue.id) }}">
+                {% if issue.serial %}
                 No. {{issue.serial}}
+                {% else %}
+                Unpublished Issue
+                {% endif %}
               </a>
             </div>
             <ul class="list-group">

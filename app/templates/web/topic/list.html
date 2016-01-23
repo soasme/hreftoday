@@ -3,12 +3,37 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-  <ul>
-  {% for topic in pagination.items %}
-  <li>
-    <a href="{{ url_for('web.get_topic_issues', id=topic.id) }}"> {{topic.title}} </a>
-  </li>
-  {% endfor %}
-  </ul>
-  {{ pagination.info }}
+<div class="container">
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="panel">
+        <div class="panel-heading">
+          <h3>
+            <span>My Topics</span>
+            <div class="btn-group pull-right">
+              <a href="{{ url_for('web.add_topic') }}"
+                 class="btn btn-default">Add Topic</a>
+            </div>
+          </h3>
+        </div>
+        <ul class="list-group">
+          {% for topic in pagination.items %}
+          <li class="list-group-item">
+            <a href="{{ url_for('web.get_topic_issues', id=topic.id) }}"> {{topic.title}} </a>
+            <div class="pull-right">
+              <a href="{{ url_for('web.update_topic', id=topic.id) }}">
+                <small>Edit</small>
+              </a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {{ pagination.info }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}

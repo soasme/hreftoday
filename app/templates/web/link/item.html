@@ -3,8 +3,31 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>{{ link.title }}</h1>
-<p><a href="{{ url_for('web.get_issue', id=link.issue_id) }}">No. {{ issue.serial }}</a></p>
-<p><a href="{{ link.url }}">Read more</a></p>
-<p>{{ link.summary }}</p>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="panel">
+        <div class="panel-heading">
+          <h1>
+            {{ link.title }}
+            {% if current_user.id == link.user_id %}
+            <div class="pull-right btn-group">
+              <a href="{{ url_for('web.update_link', id=link.id) }}"
+                 class="btn btn-default">Update</a>
+            </div>
+            {% endif %}
+          </h1>
+        </div>
+        <div class="panel-body">
+          <p>
+            <a href="{{ link.url }}" class="btn btn-default">{{ link.domain }}</a>
+          </p>
+          <p>{{ link.summary }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+    </div>
+  </div>
+</div>
 {% endblock %}

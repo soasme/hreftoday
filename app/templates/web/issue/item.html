@@ -6,40 +6,44 @@
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-      <div class="row">
-        {% if not issue.serial %}
-        {{ wtf.quick_form(publish_issue_form, action=url_for('web.publish_issue', id=issue.id)) }}
-        {% endif %}
-        {% if links | length < 5 %}
-        <a href="{{ url_for('web.add_issue_link', id=issue.id) }}"
-           class="btn btn-default pull-right"
-           >Add Link</a>
-        {% endif %}
-      </div>
-      <div class="panel pannel-primary">
+    <div class="col-lg-8">
+      <div class="panel">
         <div class="panel-heading">
-          {% if issue.serial  %}
-          <h1>{{ issue.topic.title }} No. {{ issue.serial }}</h1>
-          <small>Published at {{ issue.published_at | dateformat }}</small>
-          {% else %}
-          <h1 style="unpublished-issue">Unpublished Issue</h1>
-          {% endif %}
+          <h1>
+            {% if issue.serial  %}
+            <span>{{ issue.topic.title }} No. {{ issue.serial }}</span>
+            <small>Published at {{ issue.published_at | dateformat }}</small>
+            {% else %}
+            <span>Unpublished Issue</span>
+            {% endif %}
+
+            {% if links | length < 5 %}
+            <a href="{{ url_for('web.add_issue_link', id=issue.id) }}"
+               class="btn btn-default"
+               >Add Link</a>
+            {% endif %}
+          </h1>
         </div>
+        <ul class="list-group">
+          {% for link in links %}
+          <li class="list-group-item">
+            <a href="{{ url_for('web.get_link', id=link.id) }}"
+               class="lead"
+               >{{ link.title }}</a>
+            <p>{{ link.summary }}</p>
+          </li>
+          {% endfor %}
+        </ul>
         <div class="panel-body">
-          <ul class="list-group">
-            {% for link in links %}
-            <li class="list-group-item">
-              <a href="{{ url_for('web.get_link', id=link.id) }}"
-                 class="lead"
-                 >{{ link.title }}</a>
-              <p>{{ link.summary }}</p>
-            </li>
-            {% endfor %}
-          </ul>
+          {% if not issue.serial and links | length >= 5 %}
+          {{ wtf.quick_form(publish_issue_form, action=url_for('web.publish_issue', id=issue.id)) }}
+          {% elif not issue.serial %}
+          <p>Please at least add 5 links before publishing this issue.</p>
+          {% endif %}
         </div>
       </div>
     </div>
+    <div class="col-lg-4"></div>
   </div>
 </div>
 {% endblock %}

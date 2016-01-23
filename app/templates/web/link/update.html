@@ -4,5 +4,14 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{{ wtf.quick_form(form) }}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8">
+      <h1>Edit "{{ link.title }}"</h1>
+      {{ wtf.quick_form(form) }}
+    </div>
+    <div class="col-lg-4">
+    </div>
+  </div>
+</div>
 {% endblock %}

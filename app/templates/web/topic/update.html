@@ -4,5 +4,12 @@
 {% block title %}Add Topic{% endblock %}
 
 {% block content %}
-{{ wtf.quick_form(form) }}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8">
+      <h1>Edit "{{ topic.title }}"</h1>
+      {{ wtf.quick_form(form) }}
+    </div>
+  </div>
+</div>
 {% endblock %}
