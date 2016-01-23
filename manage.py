@@ -3,6 +3,7 @@
 import os
 from app.application import create_app
 from app.core import db
+from app import models
 from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
 
