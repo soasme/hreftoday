@@ -57,7 +57,7 @@ class Link(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     @property
     def domain(self):
-        return urlparse(self.url).hostname
+        return urlparse(self.url).hostname or self.url
 
 class Tag(db.Model):
     __tablename__ = 'tag'
