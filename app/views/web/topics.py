@@ -12,6 +12,7 @@ from app.core import db
 from .core import bp
 
 @bp.route('/topics', defaults={'page': 1})
+@login_required
 @templated('web/topic/list.html')
 def get_topics(page):
     return dict(
