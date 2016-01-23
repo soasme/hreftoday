@@ -1,3 +1,4 @@
+alembic==0.8.4
 appnope==0.1.0
 bcrypt==2.0.0
 blinker==1.4
@@ -10,6 +11,7 @@ flask-appconfig==0.11.1
 Flask-Bootstrap==3.3.5.7
 Flask-Login==0.3.2
 Flask-Mail==0.9.1
+Flask-Migrate==1.7.0
 flask-nav==0.5
 Flask-Script==2.0.5
 Flask-SQLAlchemy==2.1
@@ -21,6 +23,7 @@ ipython==4.0.3
 ipython-genutils==0.1.0
 itsdangerous==0.24
 Jinja2==2.8
+Mako==1.0.3
 MarkupSafe==0.23
 passlib==1.6.5
 path.py==8.1.2
@@ -30,6 +33,7 @@ psycopg2==2.6.1
 ptyprocess==0.5
 pycparser==2.14
 pycrypto==2.6.1
+python-editor==0.5
 simplegeneric==0.8.1
 six==1.10.0
 SQLAlchemy==1.0.11
