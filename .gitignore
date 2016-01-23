@@ -108,7 +108,4 @@ venv/
 # PyBuilder
 target/
 
-nasdaq/templates
-nasdaq/static
-nasdaq/settings/production.py
-nasdaq/settings/staging.py
+app/.env
