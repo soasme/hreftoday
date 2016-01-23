@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, url_for, redirect, request, abort
+from datetime import datetime
+from flask import render_template, url_for, redirect, request, abort, flash
 from flask_login import login_required, current_user
 from app.models import Issue, Link, LinkTag, Tag, Topic
 from app.utils.forms import populate_obj, form_required, save_form_obj
 from app.utils.transaction import transaction
-from app.utils.view import templated, ensure_resource
+from app.utils.view import templated, ensure_resource, redirect_to, ensure_owner
 from app.forms import TopicForm, AddIssueForm, PublishIssueForm, LinkForm
 from app.core import db
 from .core import bp
@@ -37,7 +38,7 @@ def add_issue(id, topic):
     issue = Issue(user_id=current_user.id, topic_id=topic.id)
     return save_form_obj(
         db, AddIssueForm, issue,
-        build_next=lambda form, issue: url_for('web.get_topic_issues', id=topic.id),
+        build_next=lambda form, issue: url_for('web.get_issue', id=issue.id),
     )
 
 @bp.route('/issues/<int:id>')
@@ -49,22 +50,28 @@ def get_issue(id):
         tag_ids = [link_tag.tag_id for link_tag in link_tags]
         link.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
     publish_issue_form = PublishIssueForm()
-    add_link_form = AddLinkForm()
+    add_link_form = LinkForm()
     return render_template('web/issue/item.html', issue=issue, links=links, publish_issue_form=publish_issue_form, add_link_form=add_link_form)
 
-@bp.route('/issues/<int:id>/publish')
-def publish_issue_page(id):
-    issue = Issue.query.get_or_404(id)
-    return render_template('web/issue/publish.html', issue=issue)
-
 @bp.route('/issues/<int:id>/publish', methods=['POST'])
-def publish_issue(id):
-    issue = Issue.query.get_or_404(id)
+@transaction(db)
+@login_required
+@ensure_resource(Issue)
+def publish_issue(id, issue):
+    ensure_owner(issue)
     if issue.serial:
-        return abort(400)
-    current_topic_max_serial = Issue.query.filter_by(topic_id=issue.topic_id).order_by(Issue.serial.desc()).with_entities(Issue.serial).scalar() or 0
+        return redirect_to('web.get_issue', id=issue.id)
+    if Link.query.filter_by(issue_id=id).count() < 5:
+        flash('Please at least add 5 links before publishing this issue.', 'danger')
+        return redirect_to('web.get_issue', id=issue.id)
+    current_topic_max_serial = Issue.query.filter_by(
+        topic_id=issue.topic_id
+    ).order_by(
+        Issue.serial.desc()
+    ).with_entities(Issue.serial).scalar() or 0
     issue.serial = 1 + current_topic_max_serial
-    return _save_issue(issue)
+    issue.published_at = datetime.utcnow()
+    return redirect_to('web.get_issue', id=issue.id)
 
 def _save_issue(issue):
     populate_obj(issue)
