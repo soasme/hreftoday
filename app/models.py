@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+from urlparse import urlparse
 from flask_user import UserMixin
 from app.core import db
 
@@ -37,6 +38,9 @@ class Issue(db.Model):
     serial = db.Column(db.Integer)
     published_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    @property
+    def topic(self):
+        return Topic.query.get(self.topic_id)
 
 class Link(db.Model):
     __tablename__ = 'link'
@@ -50,6 +54,9 @@ class Link(db.Model):
     url = db.Column(db.String(1024), nullable=False)
     cover = db.Column(db.String(128))
     summary = db.Column(db.Text)
+    @property
+    def domain(self):
+        return urlparse(self.url).hostname
 
 class Tag(db.Model):
     __tablename__ = 'tag'
