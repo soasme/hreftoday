@@ -1,4 +1,27 @@
 {% macro btn_group_filter(variable_key, variable_value, filter_value, text) %}
 <a class="btn btn-default {% if variable_value == filter_value %}btn-primary{% endif %}"
-  href="?{{ variable_key }}={{ filter_value }}">{{ text }}</a>
+   href="?{{ variable_key }}={{ filter_value }}">{{ text }}</a>
+{% endmacro %}
+
+{% macro modal_frame(id) %}
+<div class="modal fade"
+     id="{{ id }}"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="{{ title}}-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro modal_header(title='') %}
+  <button type="button" class="close" data-dismiss="modal"
+          aria-label="Close"
+          ><span aria-hidden="true">&times;</span>
+  </button>
+  {% if title %}
+  <h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
+  {% endif %}
 {% endmacro %}
