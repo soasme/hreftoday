@@ -5,6 +5,7 @@ from urlparse import urlparse
 from flask import abort
 from flask_user import UserMixin
 from app.core import db
+from app.utils.flask_amazon import amazon
 
 class DeletableMixin(object):
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
@@ -36,6 +37,7 @@ class Ad(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     asin = db.Column(db.String(20), nullable=False)
+    url = db.Column(db.String(1024), nullable=False)
     title = db.Column(db.String(128), nullable=False)
     description = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

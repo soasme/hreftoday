@@ -20,6 +20,7 @@ def upgrade():
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('asin', sa.String(20), nullable=False),
         sa.Column('title', sa.String(128), nullable=False),
+        sa.Column('url', sa.String(1024), nullable=False),
         sa.Column('description', sa.String(256), nullable=False),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.PrimaryKeyConstraint('id'),
