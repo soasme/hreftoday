@@ -4,6 +4,7 @@ from datetime import datetime
 from urlparse import urlparse
 from flask import abort
 from flask_user import UserMixin
+from sqlalchemy.dialects import postgresql
 from app.core import db
 from app.utils.flask_amazon import amazon
 
@@ -96,6 +97,7 @@ class Link(db.Model):
     url = db.Column(db.String(1024), nullable=False)
     cover = db.Column(db.String(128))
     summary = db.Column(db.Text)
+    keywords = db.Column(postgresql.ARRAY(db.String(32)), default=[])
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     @property
     def domain(self):
