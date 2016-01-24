@@ -7,7 +7,7 @@ from flask_appconfig import AppConfig
 from flask_appconfig.env import from_envvars
 from app.core import db, nav, bootstrap, user_manager, login_manager, mail
 from app.views import web
-from app.models import User
+from app.models import User, UserInvitation
 from app.consts import NAV_VIEWS
 from app.utils.filters import FILTERS
 
@@ -31,7 +31,11 @@ def create_app(config_file=None):
     mail.app = app
     mail.init_app(app)
 
-    user_manager.init_app(app, db_adapter=SQLAlchemyAdapter(db, User), login_manager=login_manager)
+    user_manager.init_app(
+        app,
+        db_adapter=SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation),
+        login_manager=login_manager
+    )
     app.register_blueprint(web.bp)
 
     for jinja_filter in FILTERS:
