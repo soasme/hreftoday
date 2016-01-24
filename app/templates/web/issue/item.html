@@ -17,10 +17,12 @@
             <span>Unpublished Issue</span>
             {% endif %}
 
+            {% if issue is owned_by_current_user %}
             {% if links | length < 5 %}
             <a href="{{ url_for('web.add_issue_link', id=issue.id) }}"
                class="btn btn-default"
                >Add Link</a>
+            {% endif %}
             {% endif %}
           </h1>
         </div>
@@ -34,6 +36,7 @@
           </li>
           {% endfor %}
         </ul>
+        {% if issue is owned_by_current_user %}
         <div class="panel-body">
           {% if not issue.serial and links | length >= 5 %}
           {{ wtf.quick_form(publish_issue_form, action=url_for('web.publish_issue', id=issue.id)) }}
@@ -41,6 +44,7 @@
           <p>Please at least add 5 links before publishing this issue.</p>
           {% endif %}
         </div>
+        {% endif %}
       </div>
     </div>
     <div class="col-md-4"></div>

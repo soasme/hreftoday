@@ -10,6 +10,7 @@ from app.views import web
 from app.models import User, UserInvitation
 from app.consts import NAV_VIEWS
 from app.utils.filters import FILTERS
+from app.utils.jinja_tests import TESTS
 
 def create_app(config_file=None):
     app = Flask('app')
@@ -40,4 +41,6 @@ def create_app(config_file=None):
 
     for jinja_filter in FILTERS:
         app.jinja_env.filters[jinja_filter] = FILTERS[jinja_filter]
+    for jinja_test in TESTS:
+        app.jinja_env.tests[jinja_test] = TESTS[jinja_test]
     return app
