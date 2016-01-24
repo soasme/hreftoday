@@ -1,0 +1,17 @@
+{% extends "web/layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "web/utils.html" as web_utils %}
+
+{% block body %}
+<div class="modal-header">
+  {{ web_utils.modal_header("Delete Topic") }}
+</div>
+
+<div class="modal-body">
+  Do you really want to delete this topic?
+</div>
+
+<div class="modal-footer">
+  {{ wtf.quick_form(form, action=url_for("web.delete_topic", id=topic.id)) }}
+</div>
+{% endblock %}
