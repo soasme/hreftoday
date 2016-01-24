@@ -13,20 +13,56 @@
             {% if current_user.id == link.user_id %}
             <div class="pull-right btn-group">
               <a href="{{ url_for('web.update_link', id=link.id) }}"
-                 class="btn btn-default">Update</a>
+                 class="btn btn-default btn-sm"><i class="glyphicon glyphicon-edit"></i></a>
             </div>
             {% endif %}
           </h1>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{{ url_for('web.get_topic_issues', id=issue.topic_id) }}"
+                 >{{ issue.topic.title }}</a>
+            </li>
+            <li>
+              <a href="{{ url_for('web.get_issue', id=issue.id) }}">
+                {% if issue.serial %}
+                <span>No. {{ issue.serial }}</span>
+                {% endif %}
+                <span>{{ issue.title }}</span>
+              </a>
+            </li>
+            <li class="active">
+              {{ link.title }}
+            </li>
+          </ol>
         </div>
         <div class="panel-body">
           <p>
-            <a href="{{ link.url }}" class="btn btn-default">{{ link.domain }}</a>
+            <a href="{{ link.url }}" class="btn btn-default" title="{{ link.title }}"
+               ><i class="glyphicon glyphicon-share-alt"></i> {{ link.domain }}</a>
           </p>
           <p>{{ link.summary }}</p>
         </div>
       </div>
     </div>
     <div class="col-md-4">
+      {% if ads %}
+      <div class="panel">
+        <div class="panel-heading">
+          <h3>Recommend Reads</h3>
+        </div>
+        <ul class="list-group">
+          {% for ad in ads %}
+          <li class="list-group-item">
+            <a rel="nofollow" href="{{ ad.isbn }}">
+              <i class="glyphicon glyphicon-book"></i>
+              {{ ad.title }}
+            </a>
+            <p>{{ ad.description }}</p>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>

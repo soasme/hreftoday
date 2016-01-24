@@ -11,20 +11,34 @@
         <div class="panel-heading">
           <h1>
             {% if issue.serial  %}
-            <span>{{ issue.topic.title }} No. {{ issue.serial }}</span>
-            <small>Published at {{ issue.published_at | dateformat }}</small>
+            <span>No. {{ issue.serial }} {{ issue.title }}</span>
+            <small>{{ issue.published_at | dateformat }}</small>
             {% else %}
-            <span>Unpublished Issue</span>
+            <span>{{ issue.title }}</span>
             {% endif %}
 
             {% if issue is belongs_to_me %}
             {% if links | length < 5 %}
-            <a href="{{ url_for('web.add_issue_link', id=issue.id) }}"
+            <div class="pull-right">
+              <a href="{{ url_for('web.add_issue_link', id=issue.id) }}"
                class="btn btn-default"
-               >Add Link</a>
+               ><i class="glyphicon glyphicon-plus"></i> Add Link</a>
+            </div>
             {% endif %}
             {% endif %}
           </h1>
+          <ol class="breadcrumb">
+            <li>
+              <a href="{{ url_for('web.get_topic_issues', id=topic.id) }}"
+                 >{{ topic.title }}</a>
+            </li>
+            <li class="active">
+              {% if issue.serial %}
+              <span>No. {{ issue.serial }}</span>
+              {% endif %}
+              <span>{{ issue.title }}</span>
+            </li>
+          </ol>
         </div>
         <ul class="list-group">
           {% for link in links %}
