@@ -6,19 +6,23 @@ from app.core import db
 from app.utils.transaction import transaction
 from app.utils.view import ensure_resource, templated
 from app.utils.forms import save_form_obj
-from app.models import Link, Tag, LinkTag, Issue
+from app.models import Link, Tag, LinkTag, Issue, LinkAd, Topic, Ad
 from app.forms import LinkForm
 
 from .core import bp
 
 @bp.route('/links/<int:id>')
+@templated('web/link/item.html')
 def get_link(id):
     link = Link.query.get_or_404(id)
     issue = Issue.query.get_or_404(link.issue_id)
+    topic = Topic.query.get_or_404(issue.topic_id)
     link_tags = LinkTag.query.filter_by(link_id=id).order_by(LinkTag.weight.desc()).limit(10).all()
     tag_ids = [link_tag.tag_id for link_tag in link_tags]
     tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
-    return render_template('web/link/item.html', link=link, tags=tags, issue=issue)
+    link_ads = LinkAd.query.filter_by(link_id=id).order_by(LinkAd.weight.desc()).limit(3).all()
+    ads = Ad.query.filter(Ad.id.in_([l.ad_id for l in link_ads])).all()
+    return dict(link=link, tags=tags, issue=issue, ads=ads, topic=topic)
 
 @bp.route('/issues/<int:id>/links', methods=['GET', 'POST'])
 @transaction(db)
