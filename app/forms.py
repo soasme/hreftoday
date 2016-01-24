@@ -26,6 +26,9 @@ class TopicForm(Form):
     description = TextAreaField('description', validators=[DataRequired(), Length(max=1000)])
     submit = SubmitField('Save')
 
+class DeleteTopicForm(Form):
+    submit = SubmitField('Confirm')
+
 class AddIssueForm(Form):
     submit = SubmitField('Add Issue')
 
