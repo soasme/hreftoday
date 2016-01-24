@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask import url_for, redirect, render_template
+from flask import url_for, redirect, render_template, flash
 from flask_login import current_user, login_required
 from sqlalchemy.exc import IntegrityError
 from app.utils.forms import save_form_obj
-from app.utils.view import templated, ensure_resource
+from app.utils.view import templated, ensure_resource, ensure_owner, redirect_to
 from app.utils.transaction import transaction
 from app.models import Topic, TopicFollow
-from app.forms import TopicForm
+from app.forms import TopicForm, DeleteTopicForm
 from app.core import db
 from .core import bp
 
@@ -16,7 +16,10 @@ from .core import bp
 @templated('web/topic/list.html')
 def get_topics(page):
     return dict(
-        pagination=Topic.query.filter_by(user_id=current_user.id).paginate(page),
+        pagination=Topic.query.filter(
+            Topic.user_id==current_user.id,
+            Topic.is_deleted==False,
+        ).paginate(page)
     )
 
 @bp.route('/topics/add', methods=['GET', 'POST'])
@@ -44,11 +47,30 @@ def update_topic(id, topic):
         before_render_map=['obj->topic'],
     )
 
+@bp.route('/topics/<int:id>/delete', methods=['GET', 'POST'])
+@transaction(db)
+@login_required
+@templated('web/topic/delete.html')
+@ensure_resource(Topic)
+def delete_topic(id, topic):
+    ensure_owner(topic)
+    form = DeleteTopicForm()
+    if form.validate_on_submit():
+        topic.is_deleted = True
+        return redirect_to('web.get_topics')
+    if form.errors:
+        flash("Invalid request!", "error")
+        return redirect_to('web.get_topics')
+    return dict(
+        form=form,
+        topic=topic,
+    )
+
 @bp.route('/topics/<int:id>/follow')
 @login_required
 def follow_topic(id):
     try:
-        topic = Topic.query.get_or_404(id)
+        topic = Topic.get_or_404(id)
         follow = TopicFollow(user_id=current_user.id, topic_id=topic.id)
         db.session.add(follow)
         db.session.commit()
