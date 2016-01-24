@@ -2,6 +2,7 @@ alembic==0.8.4
 appnope==0.1.0
 bcrypt==2.0.0
 blinker==1.4
+bottlenose==0.6.3
 cffi==1.5.0
 click==6.2
 decorator==4.0.6
@@ -23,6 +24,7 @@ ipython==4.0.3
 ipython-genutils==0.1.0
 itsdangerous==0.24
 Jinja2==2.8
+lxml==3.5.0
 Mako==1.0.3
 MarkupSafe==0.23
 passlib==1.6.5
@@ -33,6 +35,8 @@ psycopg2==2.6.1
 ptyprocess==0.5
 pycparser==2.14
 pycrypto==2.6.1
+python-amazon-simple-product-api==2.0.1
+python-dateutil==2.4.2
 python-editor==0.5
 simplegeneric==0.8.1
 six==1.10.0
