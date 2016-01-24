@@ -6,7 +6,17 @@ from flask import abort
 from flask_user import UserMixin
 from app.core import db
 
-class Topic(db.Model):
+class DeletableMixin(object):
+    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
+
+    @classmethod
+    def get_or_404(cls, id):
+        obj = cls.query.get_or_404(id)
+        if obj.is_deleted:
+            abort(404)
+        return obj
+
+class Topic(db.Model, DeletableMixin):
     __tablename__ = 'topic'
     __table_args__ = (
         db.Index('ix_user', 'user_id'),
@@ -16,15 +26,7 @@ class Topic(db.Model):
     user_id = db.Column(db.Integer, nullable=False)
     title = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text, nullable=False, default='')
-    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    @classmethod
-    def get_or_404(cls, id):
-        topic = Topic.query.get_or_404(id)
-        if topic.is_deleted:
-            abort(404)
-        return topic
 
 class TopicFollow(db.Model):
     __tablename__ = 'topic_follow'
