@@ -33,8 +33,9 @@ def get_topic_issues(id, page, topic):
 @bp.route('/topics/<int:id>/issues/add', methods=['POST'])
 @transaction(db)
 @login_required
+@templated('web/issue/add.html')
 @ensure_resource(Topic)
-def add_issue(id, topic):
+def add_topic_issue(id, topic):
     issue = Issue(user_id=current_user.id, topic_id=topic.id)
     return save_form_obj(
         db, AddIssueForm, issue,
