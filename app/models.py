@@ -28,6 +28,34 @@ class Topic(db.Model, DeletableMixin):
     description = db.Column(db.Text, nullable=False, default='')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class Ad(db.Model):
+    __tablename__ = 'ad'
+    __table_args__ = (
+        db.UniqueConstraint('asin', name='ix_ad_asin'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    asin = db.Column(db.String(20), nullable=False)
+    title = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.String(256), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class LinkAd(db.Model):
+    __tablename__ = 'link_ad'
+    __table_args__ = (
+        db.Index('ix_link', 'link_id', 'weight'),
+        db.Index('ix_issue', 'issue_id', 'weight'),
+        db.UniqueConstraint('link_id', 'ad_id', name='ux_link_ad'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    issue_id = db.Column(db.Integer, nullable=False)
+    link_id = db.Column(db.Integer, nullable=False)
+    ad_id = db.Column(db.Integer, nullable=False)
+    weight = db.Column(db.Numeric(5, 2), nullable=False, default='0')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
 class TopicFollow(db.Model):
     __tablename__ = 'topic_follow'
     __table_args__ = (
@@ -46,6 +74,7 @@ class Issue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
     topic_id = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String(128), nullable=False)
     serial = db.Column(db.Integer)
     published_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
