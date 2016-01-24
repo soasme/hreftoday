@@ -20,21 +20,21 @@
         </div>
       </h3>
       <p>{{ topic.description }}</p>
-    </div>
-  </div>
-  {% if topic is belongs_to_me  %}
-  <div class="row">
-    <div class="navbar">
-        <div class="btn-group">
-          {{ utils.btn_group_filter('is_published', is_published | int, 1, 'Published') }}
-          {{ utils.btn_group_filter('is_published', is_published | int, 0, 'Unpublished') }}
+      {% if topic is belongs_to_me and is_published and unpublished_count > 0 %}
+      <div class="row">
+        <div class="col-md-12">
+          <p>
+            You have {{ unpublished_count }} draft issues, edit and publish them?
+            <a href="{{ url_for('web.get_topic_issues', id=topic.id, is_published=0) }}">
+              Click here
+            </a>
+            .
+          </p>
         </div>
-      <div class="pull-right">
-        {{ wtf.quick_form(add_issue_form, action=url_for('web.add_issue', id=topic.id)) }}
       </div>
+      {% endif %}
     </div>
   </div>
-  {% endif %}
   <div class="row">
     <div class="col-md-8">
       <div class="row">
@@ -44,9 +44,9 @@
             <div class="panel-heading">
               <a href="{{ url_for('web.get_issue', id=issue.id) }}">
                 {% if issue.serial %}
-                No. {{issue.serial}}
+                No. {{issue.serial}} {{ issue.title | truncate(15) }}
                 {% else %}
-                Unpublished Issue
+                {{ issue.title | truncate(15) }}
                 {% endif %}
               </a>
             </div>
