@@ -15,6 +15,12 @@ class DataExisted(object):
         if not self.model_class.query.get(id):
             raise ValidationError('%s %d does not exist.' % (self.model_class.__name__, id))
 
+class DeletableForm(Form):
+    submit = SubmitField('Confirm')
+
+    def populate_obj(self, obj):
+        obj.is_deleted = True
+
 class LinkForm(Form):
     title = StringField('title', validators=[DataRequired(), Length(max=100)])
     url = StringField('url', validators=[DataRequired(), Length(max=1024)])
@@ -26,14 +32,20 @@ class TopicForm(Form):
     description = TextAreaField('description', validators=[DataRequired(), Length(max=1000)])
     submit = SubmitField('Save')
 
-class DeleteTopicForm(Form):
-    submit = SubmitField('Confirm')
+class DeleteTopicForm(DeletableForm):
+    pass
 
 class AddIssueForm(Form):
     submit = SubmitField('Add Issue')
+
+class DeleteIssueForm(DeletableForm):
+    pass
 
 class PublishIssueForm(Form):
     submit = SubmitField('Publish Issue')
 
 class FollowTopicForm(Form):
     submit = SubmitField('Follow Topic')
+
+class DeleteLinkForm(DeletableForm):
+    pass
