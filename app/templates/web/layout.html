@@ -1,5 +1,22 @@
 {% extends "bootstrap/base.html" %}
+{% import "bootstrap/utils.html" as bootstrap_utils %}
+
+{% block body -%}
 
 {% block navbar %}
 {{nav.top.render()}}
+{% endblock navbar %}
+
+{% block flashed %}
+{{ bootstrap_utils.flashed_messages() }}
 {% endblock %}
+
+{% block content %}
+{% endblock content %}
+
+{% block scripts %}
+<script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
+<script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+{%- endblock scripts %}
+
+{%- endblock body %}
