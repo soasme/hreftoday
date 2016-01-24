@@ -55,6 +55,7 @@ def save_form_obj(db,
                   build_next,
                   before_populate=None,
                   after_populate=None,
+                  before_redirect=None,
                   before_render=None,
                   before_render_map=None):
     form = form_class(obj=obj)
@@ -66,6 +67,8 @@ def save_form_obj(db,
         db.session.commit()
         if after_populate:
             after_populate(form)
+        if before_redirect:
+            before_redirect(form)
         return redirect(build_next(form, obj))
     data = dict(
         form=form,
