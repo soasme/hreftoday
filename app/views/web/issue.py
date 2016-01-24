@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+from sqlalchemy import func
 from flask import render_template, url_for, redirect, request, abort, flash
 from flask_login import login_required, current_user
 from app.models import Issue, Link, LinkTag, Tag, Topic
@@ -17,20 +18,27 @@ from .core import bp
 def get_topic_issues(id, page, topic):
     is_published = request.args.get('is_published', type=int, default=1)
     if is_published:
-        pagination = Issue.query.filter(Issue.topic_id==id, Issue.serial!=None).paginate(page)
+        pagination = Issue.query.filter(Issue.topic_id==id, Issue.serial!=None).order_by(
+            Issue.serial.desc()
+        ).paginate(page)
     else:
-        pagination = Issue.query.filter_by(topic_id=topic.id, serial=None).paginate(page)
+        pagination = Issue.query.filter_by(topic_id=topic.id, serial=None).order_by(
+            Issue.created_at.desc()
+        ).paginate(page)
+    unpublished_count = Issue.query.filter_by(
+        topic_id=topic.id, serial=None).value(func.count(1))
     for issue in pagination.items:
         issue.links = Link.query.filter_by(issue_id=issue.id).order_by(Link.created_at.desc()).all()
     add_issue_form = AddIssueForm()
     return dict(
         is_published=is_published,
         pagination=pagination,
+        unpublished_count=unpublished_count,
         add_issue_form=add_issue_form,
         topic=topic,
     )
 
-@bp.route('/topics/<int:id>/issues/add', methods=['POST'])
+@bp.route('/topics/<int:id>/issues/add', methods=['GET', 'POST'])
 @transaction(db)
 @login_required
 @templated('web/issue/add.html')
@@ -45,6 +53,7 @@ def add_topic_issue(id, topic):
 @bp.route('/issues/<int:id>')
 def get_issue(id):
     issue = Issue.query.get_or_404(id)
+    topic = Topic.query.get_or_404(issue.topic_id)
     links = Link.query.filter_by(issue_id=id).all()
     for link in links:
         link_tags = LinkTag.query.filter_by(link_id=id).order_by(LinkTag.weight.desc()).limit(10).all()
@@ -52,7 +61,7 @@ def get_issue(id):
         link.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
     publish_issue_form = PublishIssueForm()
     add_link_form = LinkForm()
-    return render_template('web/issue/item.html', issue=issue, links=links, publish_issue_form=publish_issue_form, add_link_form=add_link_form)
+    return render_template('web/issue/item.html', issue=issue, links=links, publish_issue_form=publish_issue_form, add_link_form=add_link_form, topic=topic)
 
 @bp.route('/issues/<int:id>/publish', methods=['POST'])
 @transaction(db)
