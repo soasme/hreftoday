@@ -1,10 +1,11 @@
 {% extends "web/layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "web/utils.html" as utils %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 <div class="container">
-
   <div class="row">
     <div class="col-lg-8">
       <div class="panel">
@@ -25,6 +26,10 @@
               <a href="{{ url_for('web.update_topic', id=topic.id) }}">
                 <small>Edit</small>
               </a>
+              <a data-toggle="modal" data-target="#delete-topic-modal"
+                 href="{{ url_for('web.delete_topic', id=topic.id) }}">
+                <small>Delete</small>
+              </a>
             </div>
           </li>
           {% endfor %}
@@ -35,5 +40,6 @@
   </div>
 </div>
 
+{{ utils.modal_frame("delete-topic-modal")}}
 
 {% endblock %}
