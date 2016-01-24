@@ -19,6 +19,8 @@ def get_topics(page):
         pagination=Topic.query.filter(
             Topic.user_id==current_user.id,
             Topic.is_deleted==False,
+        ).order_by(
+            Topic.created_at.desc(),
         ).paginate(page)
     )
 
