@@ -33,6 +33,7 @@ def add_topic():
     return save_form_obj(
         db, TopicForm, topic,
         build_next=lambda form, topic: url_for('web.get_topic_issues', id=topic.id),
+        before_redirect=lambda form: flash("Topic has been added.", "success"),
     )
 
 @bp.route('/topics/<int:id>/update', methods=['GET', 'POST'])
@@ -41,12 +42,14 @@ def add_topic():
 @templated('web/topic/update.html')
 @ensure_resource(Topic)
 def update_topic(id, topic):
+    ensure_owner(topic)
     return save_form_obj(
         db,
         TopicForm,
         obj=topic,
         build_next=lambda form, topic: url_for('web.get_topic_issues', id=id),
         before_render_map=['obj->topic'],
+        before_redirect=lambda form: flash("Topic has been updated.", "success"),
     )
 
 @bp.route('/topics/<int:id>/delete', methods=['GET', 'POST'])
@@ -56,16 +59,13 @@ def update_topic(id, topic):
 @ensure_resource(Topic)
 def delete_topic(id, topic):
     ensure_owner(topic)
-    form = DeleteTopicForm()
-    if form.validate_on_submit():
-        topic.is_deleted = True
-        return redirect_to('web.get_topics')
-    if form.errors:
-        flash("Invalid request!", "error")
-        return redirect_to('web.get_topics')
-    return dict(
-        form=form,
-        topic=topic,
+    return save_form_obj(
+        db,
+        DeleteTopicForm,
+        obj=topic,
+        build_next=lambda form, topic: url_for('web.get_topics'),
+        before_render_map=['obj->topic'],
+        before_redirect=lambda form: flash("Topic has been deleted.", "success")
     )
 
 @bp.route('/topics/<int:id>/follow')
