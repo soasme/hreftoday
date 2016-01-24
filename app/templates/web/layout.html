@@ -8,7 +8,7 @@
 {% endblock navbar %}
 
 {% block flashed %}
-{{ bootstrap_utils.flashed_messages() }}
+{{ bootstrap_utils.flashed_messages(dismissible=True) }}
 {% endblock %}
 
 {% block content %}
