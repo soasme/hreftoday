@@ -17,7 +17,7 @@
       <p>{{ topic.description }}</p>
     </div>
   </div>
-  {% if current_user.id == topic.user_id %}
+  {% if topic is belongs_to_me  %}
   <div class="row">
     <div class="navbar">
         <div class="btn-group">
@@ -31,11 +31,10 @@
   </div>
   {% endif %}
   <div class="row">
-    <div class="col-md-12">
-
+    <div class="col-md-8">
       <div class="row">
         {% for issue in pagination.items %}
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="panel panel-default">
             <div class="panel-heading">
               <a href="{{ url_for('web.get_issue', id=issue.id) }}">
@@ -60,6 +59,8 @@
         {% endfor %}
         {{ pagination.info }}
       </div>
+    </div>
+    <div class="col-md-4">
     </div>
   </div>
 </div>
