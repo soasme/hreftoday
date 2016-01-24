@@ -119,3 +119,15 @@ class User(db.Model, UserMixin):
     reset_password_token = db.Column(db.String(128), nullable=False, server_default='')
     auth_token = db.Column(db.String(128))
     active = db.Column(db.Boolean(), nullable=False, server_default='0')
+
+class UserInvitation(db.Model):
+    __tablename__ = 'user_invite'
+    __table_args__ = (
+        db.UniqueConstraint('email', name='ux_email'),
+        db.UniqueConstraint('token', name='ux_token'),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), nullable=False)
+    invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    token = db.Column(db.String(100), nullable=False, server_default='')
+    created_at = db.Column(db.DateTime(), default=datetime.utcnow)
