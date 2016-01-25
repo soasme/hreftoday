@@ -19,6 +19,7 @@ enum34==1.1.2
 Flask==0.10.1
 flask-appconfig==0.11.1
 Flask-Bootstrap==3.3.5.7
+Flask-Celery-Helper==1.1.0
 Flask-Login==0.3.2
 Flask-Mail==0.9.1
 Flask-Migrate==1.7.0
