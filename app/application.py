@@ -32,8 +32,8 @@ def create_app(config_file=None):
     mail.app = app
     mail.init_app(app)
 
-    celery.app = app
-    celery.init_app(app)
+    #celery.app = app
+    #celery.init_app(app)
 
     user_manager.init_app(
         app,
