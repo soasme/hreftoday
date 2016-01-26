@@ -8,7 +8,7 @@ from app.models import Issue, Link, LinkTag, Tag, Topic
 from app.utils.forms import populate_obj, form_required, save_form_obj
 from app.utils.transaction import transaction
 from app.utils.view import templated, ensure_resource, redirect_to, ensure_owner
-from app.forms import TopicForm, AddIssueForm, PublishIssueForm, LinkForm
+from app.forms import TopicForm, IssueForm, PublishIssueForm, LinkForm
 from app.core import db
 from .core import bp
 
@@ -29,7 +29,7 @@ def get_topic_issues(id, page, topic):
         topic_id=topic.id, serial=None).value(func.count(1))
     for issue in pagination.items:
         issue.links = Link.query.filter_by(issue_id=issue.id).order_by(Link.created_at.desc()).all()
-    add_issue_form = AddIssueForm()
+    add_issue_form = IssueForm()
     return dict(
         is_published=is_published,
         pagination=pagination,
@@ -46,7 +46,18 @@ def get_topic_issues(id, page, topic):
 def add_topic_issue(id, topic):
     issue = Issue(user_id=current_user.id, topic_id=topic.id)
     return save_form_obj(
-        db, AddIssueForm, issue,
+        db, IssueForm, issue,
+        build_next=lambda form, issue: url_for('web.get_issue', id=issue.id),
+    )
+
+@bp.route('/issues/<int:id>/update', methods=['GET', 'POST'])
+@templated('web/issue/update.html')
+@transaction(db)
+@login_required
+@ensure_resource(Issue)
+def update_issue(id, issue):
+    return save_form_obj(
+        db, IssueForm, issue,
         build_next=lambda form, issue: url_for('web.get_issue', id=issue.id),
     )
 
