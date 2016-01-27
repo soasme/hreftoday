@@ -73,3 +73,9 @@ def delete_objects(db):
                 raise
         return _
     return deco
+
+def columns_to_dict(model):
+    dict_ = {}
+    for key in model.__mapper__.c.keys():
+        dict_[key] = getattr(model, key)
+    return dict_
