@@ -42,6 +42,7 @@ librabbitmq==1.6.1
 lxml==3.5.0
 Mako==1.0.3
 MarkupSafe==0.23
+mistune==0.7.1
 msgpack-python==0.4.7
 nltk==3.1
 passlib==1.6.5
