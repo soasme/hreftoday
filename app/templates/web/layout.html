@@ -4,7 +4,9 @@
 {% block body -%}
 
 {% block navbar %}
+{% if config.ENABLE_NAVBAR %}
 {{nav.top.render()}}
+{% endif %}
 {% endblock navbar %}
 
 {% block flashed %}
