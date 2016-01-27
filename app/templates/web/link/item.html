@@ -40,7 +40,7 @@
             <a href="{{ link.url }}" class="btn btn-default" title="{{ link.title }}"
                ><i class="glyphicon glyphicon-share-alt"></i> {{ link.domain }}</a>
           </p>
-          <p>{{ link.summary }}</p>
+          <p>{{ link.html_summary | safe }}</p>
         </div>
       </div>
     </div>

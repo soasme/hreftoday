@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from mistune import markdown
 from datetime import datetime
 from urlparse import urlparse
 from flask import abort
@@ -102,6 +103,9 @@ class Link(db.Model):
     @property
     def domain(self):
         return urlparse(self.url).hostname or self.url
+    @property
+    def html_summary(self):
+        return markdown(self.summary)
 
 class Tag(db.Model):
     __tablename__ = 'tag'
