@@ -7,7 +7,6 @@ BeautifulSoup==3.2.1
 billiard==3.3.0.22
 blinker==1.4
 bottlenose==0.6.3
-bs4==1.2.7
 celery==3.1.20
 cffi==1.5.0
 click==6.2
