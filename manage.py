@@ -10,9 +10,9 @@ from app import models
 
 
 
-app = create_app()
-manager = Manager(app)
-migrate = Migrate(app, db)
+application = create_app()
+manager = Manager(application)
+migrate = Migrate(application, db)
 
 port = int(os.environ.get('PORT', 5000))
 manager.add_command("runserver", Server(host='0.0.0.0', port=port))
