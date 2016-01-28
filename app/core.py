@@ -7,7 +7,7 @@ from flask_login import LoginManager
 from flask_user import UserManager
 from flask_mail import Mail
 from flask_celery import Celery
-from flask_sentry import Sentry
+from raven.contrib.flask import Sentry
 
 db = SQLAlchemy()
 nav = Nav()
