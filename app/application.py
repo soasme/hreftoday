@@ -6,6 +6,7 @@ from flask_user import SQLAlchemyAdapter
 from flask_appconfig import AppConfig
 from flask_appconfig.env import from_envvars
 from app.core import db, nav, bootstrap, user_manager, login_manager, mail, celery
+from app.core import sentry
 from app.views import web
 from app.models import User, UserInvitation
 from app.consts import NAV_VIEWS
@@ -32,6 +33,9 @@ def create_app(config_file=None):
     mail.app = app
     mail.init_app(app)
 
+    if not app.debug:
+        sentry.app = app
+        sentry.init_app(app)
     #celery.app = app
     #celery.init_app(app)
 
