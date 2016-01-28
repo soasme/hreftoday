@@ -85,11 +85,12 @@ def publish_issue(id, issue):
     if Link.query.filter_by(issue_id=id).count() < 5:
         flash('Please at least add 5 links before publishing this issue.', 'danger')
         return redirect_to('web.get_issue', id=issue.id)
-    current_topic_max_serial = Issue.query.filter_by(
+    latest_issue = Issue.query.filter_by(
         topic_id=issue.topic_id
     ).order_by(
         Issue.serial.desc()
-    ).with_entities(Issue.serial).scalar() or 0
+    ).first()
+    current_topic_max_serial = latest_issue and latest_issue.serial or 0
     issue.serial = 1 + current_topic_max_serial
     issue.published_at = datetime.utcnow()
     return redirect_to('web.get_issue', id=issue.id)
