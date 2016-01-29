@@ -226,9 +226,13 @@ class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50))
 
+    def __unicode__(self):
+        return 'Role %d: %s' % (self.id, self.name)
+
 class UserRoles(db.Model):
     __tablename__ = 'user_roles'
     __table_args__ = (
+        db.UniqueConstraint('user_id', 'role_id', name='uk_user_role_user_role'),
         db.ForeignKeyConstraint(
             ['user_id'], ['user.id'], ondelete='CASCADE', name='fk_user_roles_user'
         ),
