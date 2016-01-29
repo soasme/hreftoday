@@ -27,8 +27,6 @@ def get_topic_issues(id, page, topic):
         ).paginate(page)
     unpublished_count = Issue.query.filter_by(
         topic_id=topic.id, serial=None).value(func.count(1))
-    for issue in pagination.items:
-        issue.links = Link.query.filter_by(issue_id=issue.id).order_by(Link.created_at.desc()).all()
     add_issue_form = IssueForm()
     return dict(
         is_published=is_published,
@@ -62,15 +60,24 @@ def update_issue(id, issue):
     )
 
 @bp.route('/issues/<int:id>')
+@templated('web/issue/item.html')
 def get_issue(id):
     issue = Issue.query.get_or_404(id)
     topic = issue.topic
     links = issue.links[:5]
+    ads = set()
     for link in links:
-        link.tags = [tag for tag in link.tags]
+        ads.update(link.ads)
     publish_issue_form = PublishIssueForm()
     add_link_form = LinkForm()
-    return render_template('web/issue/item.html', issue=issue, links=links, publish_issue_form=publish_issue_form, add_link_form=add_link_form, topic=topic)
+    return dict(
+        issue=issue,
+        links=links,
+        topic=topic,
+        ads=ads,
+        publish_issue_form=publish_issue_form,
+        add_link_form=add_link_form,
+    )
 
 @bp.route('/issues/<int:id>/publish', methods=['POST'])
 @transaction(db)
