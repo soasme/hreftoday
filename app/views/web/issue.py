@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import func
 from flask import render_template, url_for, redirect, request, abort, flash
 from flask_login import login_required, current_user
-from app.models import Issue, Link, LinkTag, Tag, Topic
+from app.models import Issue, Link, Tag, Topic
 from app.utils.forms import populate_obj, form_required, save_form_obj
 from app.utils.transaction import transaction
 from app.utils.view import templated, ensure_resource, redirect_to, ensure_owner
@@ -64,12 +64,10 @@ def update_issue(id, issue):
 @bp.route('/issues/<int:id>')
 def get_issue(id):
     issue = Issue.query.get_or_404(id)
-    topic = Topic.query.get_or_404(issue.topic_id)
-    links = Link.query.filter_by(issue_id=id).all()
+    topic = issue.topic
+    links = issue.links[:5]
     for link in links:
-        link_tags = LinkTag.query.filter_by(link_id=id).order_by(LinkTag.weight.desc()).limit(10).all()
-        tag_ids = [link_tag.tag_id for link_tag in link_tags]
-        link.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
+        link.tags = [tag for tag in link.tags]
     publish_issue_form = PublishIssueForm()
     add_link_form = LinkForm()
     return render_template('web/issue/item.html', issue=issue, links=links, publish_issue_form=publish_issue_form, add_link_form=add_link_form, topic=topic)
