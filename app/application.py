@@ -5,10 +5,11 @@ from flask_nav.elements import Navbar, View
 from flask_user import SQLAlchemyAdapter
 from flask_appconfig import AppConfig
 from flask_appconfig.env import from_envvars
-from app.core import db, nav, bootstrap, user_manager, login_manager, mail, celery
 from app.core import sentry
+from app.core import db, nav, bootstrap, user_manager, login_manager, mail, celery, admin
 from app.views import web
-from app.models import User, UserInvitation
+from app.views.admin import AdAdminView, LinkAdminView, IssueAdminView
+from app.models import User, UserInvitation, Ad, Link, Issue
 from app.consts import NAV_VIEWS
 from app.utils.filters import FILTERS
 from app.utils.jinja_tests import TESTS
@@ -36,6 +37,13 @@ def create_app(config_file=None):
     if not app.debug:
         sentry.app = app
         sentry.init_app(app)
+
+    admin.app = app
+    admin.init_app(app)
+    admin.add_view(AdAdminView(Ad, db.session))
+    admin.add_view(LinkAdminView(Link, db.session))
+    admin.add_view(IssueAdminView(Issue, db.session))
+
     #celery.app = app
     #celery.init_app(app)
 
