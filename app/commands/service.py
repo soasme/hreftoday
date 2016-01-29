@@ -75,3 +75,20 @@ def unset_role(id, role):
     db.session.add(user)
     db.session.commit()
     print 'Role unset successfully.'
+
+@Service.command
+def add_role(name):
+    role = Role(name=name)
+    db.session.add(role)
+    db.session.commit()
+    print '%s added' % unicode(role)
+
+@Service.command
+def delete_role(name):
+    role = Role.query.filter_by(name=name).first()
+    if not role:
+        print 'Role not found'
+        exit(1)
+    db.session.delete(role)
+    db.session.commit()
+    print 'Role %s deleted' % name
