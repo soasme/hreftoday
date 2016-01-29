@@ -1,5 +1,6 @@
 {% extends "bootstrap/base.html" %}
 {% import "bootstrap/utils.html" as bootstrap_utils %}
+{% import "bootstrap/google.html" as bootstrap_google %}
 
 {% block body -%}
 
@@ -22,6 +23,9 @@
 {% block scripts %}
 <script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
 <script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+{% if config.GOOGLE_ANALYTICS_ID %}
+{{ bootstrap_google.uanalytics(config.GOOGLE_ANALYTICS_ID) }}
+{% endif %
 {%- endblock scripts %}
 
 {%- endblock body %}
