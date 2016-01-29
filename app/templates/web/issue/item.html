@@ -70,7 +70,7 @@
         <ul class="list-group">
           {% for ad in ads %}
           <li class="list-group-item">
-            <a rel="nofollow" href="{{ ad.url }}">
+            <a rel="nofollow" href="{{ ad.url }}" onclick="ga('send', 'event', 'Click Ad', 'Click Ad {{ ad.title }}');">
               <i class="glyphicon glyphicon-book"></i>
               {{ ad.title }}
             </a>
