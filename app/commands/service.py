@@ -3,7 +3,7 @@
 from flask_script import Manager
 from datetime import datetime
 from app.core import db
-from app.models import Topic, Issue
+from app.models import Topic, Issue, User, Role
 from app.utils.transaction import transaction
 
 Service = Manager('Perform service operation')
@@ -45,3 +45,33 @@ def unpublish_issue(id):
         print 'Issue unpublished'
     else:
         print 'Not Found'
+
+@Service.command
+def set_role(id, role):
+    user = User.query.get(id)
+    role = Role.query.filter_by(name=role).first()
+    if not user:
+        print 'User not found'
+        exit(1)
+    if not role:
+        print 'Role not found'
+        exit(1)
+    user.roles.append(role)
+    db.session.add(user)
+    db.session.commit()
+    print 'Role set successfully.'
+
+@Service.command
+def unset_role(id, role):
+    user = User.query.get(id)
+    role = Role.query.filter_by(name=role).first()
+    if not user:
+        print 'User not found'
+        exit(1)
+    if not role:
+        print 'Role not found'
+        exit(1)
+    user.roles.remove(role)
+    db.session.add(user)
+    db.session.commit()
+    print 'Role unset successfully.'
