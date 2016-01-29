@@ -23,6 +23,11 @@ class Topic(db.Model, DeletableMixin):
     __tablename__ = 'topic'
     __table_args__ = (
         db.Index('ix_user', 'user_id'),
+        db.ForeignKeyConstraint(
+            ['user_id'],
+            ['user.id'],
+            name='fk_topic_user',
+        ),
     )
 
     id = db.Column(db.Integer, primary_key=True)
@@ -30,6 +35,13 @@ class Topic(db.Model, DeletableMixin):
     title = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text, nullable=False, default='')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    issues = db.relationship(
+        'Issue', backref='topic', lazy='dynamic',
+    )
+
+    def __unicode__(self):
+        return u'Topic %d: %s' % (self.id, self.title)
 
 class Ad(db.Model):
     __tablename__ = 'ad'
@@ -44,26 +56,34 @@ class Ad(db.Model):
     description = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    def __unicode__(self):
+        return u'Ad %d %s: %s' % (self.id, self.asin, self.title)
 
-class LinkAd(db.Model):
-    __tablename__ = 'link_ad'
-    __table_args__ = (
-        db.Index('ix_link', 'link_id', 'weight'),
-        db.Index('ix_issue', 'issue_id', 'weight'),
-        db.UniqueConstraint('link_id', 'ad_id', name='ux_link_ad'),
-    )
 
-    id = db.Column(db.Integer, primary_key=True)
-    issue_id = db.Column(db.Integer, nullable=False)
-    link_id = db.Column(db.Integer, nullable=False)
-    ad_id = db.Column(db.Integer, nullable=False)
-    weight = db.Column(db.Numeric(5, 2), nullable=False, default='0')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+link_ad = db.Table(
+    'link_ad',
+    db.Column('link_id', db.Integer, db.ForeignKey('link.id')),
+    db.Column('ad_id', db.Integer, db.ForeignKey('ad.id')),
+    db.Column('created_at', db.DateTime, default=datetime.utcnow)
+)
+
+link_tag = db.Table(
+    'link_tag',
+    db.Column('link_id', db.Integer, db.ForeignKey('link.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
+    db.Column('created_at', db.DateTime, default=datetime.utcnow)
+)
 
 class TopicFollow(db.Model):
     __tablename__ = 'topic_follow'
     __table_args__ = (
-        db.UniqueConstraint('topic_id', 'user_id', name='ux_user_follow_topic'),
+        db.UniqueConstraint('topic_id', 'user_id', name='ux_topic_follow_user_follow_topic'),
+        db.ForeignKeyConstraint(
+            ['user_id'], ['user.id'], name='fk_topic_follow_user',
+        ),
+        db.ForeignKeyConstraint(
+            ['topic_id'], ['topic.id'], name='fk_topic_follow_topic',
+        ),
     )
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
@@ -73,7 +93,13 @@ class TopicFollow(db.Model):
 class Issue(db.Model):
     __tablename__ = 'issue'
     __table_args__ = (
-        db.UniqueConstraint('topic_id', 'serial', name='ux_topic_serial'),
+        db.UniqueConstraint('topic_id', 'serial', name='ux_issue_topic_serial'),
+        db.ForeignKeyConstraint(
+            ['user_id'], ['user.id'], name='fk_issue_user',
+        ),
+        db.ForeignKeyConstraint(
+            ['topic_id'], ['topic.id'], name='fk_issue_topic',
+        )
     )
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
@@ -82,14 +108,22 @@ class Issue(db.Model):
     serial = db.Column(db.Integer)
     published_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    @property
-    def topic(self):
-        return Topic.query.get(self.topic_id)
+
+    links = db.relationship('Link', backref='issue', lazy='dynamic')
+
+    def __unicode__(self):
+        return u'Issue %d: %s' % (self.id, self.title)
 
 class Link(db.Model):
     __tablename__ = 'link'
     __table_args__ = (
         db.Index('ix_issue', 'issue_id'),
+        db.ForeignKeyConstraint(
+            ['user_id'], ['user.id'], name='fk_link_user',
+        ),
+        db.ForeignKeyConstraint(
+            ['issue_id'], ['issue.id'], name='fk_link_issue',
+        ),
     )
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
@@ -100,12 +134,25 @@ class Link(db.Model):
     summary = db.Column(db.Text)
     keywords = db.Column(postgresql.ARRAY(db.String(32)), default=[])
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    ads = db.relationship(
+        'Ad', secondary=link_ad,
+        backref=db.backref('links', lazy='dynamic'),
+    )
+    tags = db.relationship(
+        'Tag', secondary=link_tag,
+        backref=db.backref('links', lazy='dynamic'),
+    )
+
     @property
     def domain(self):
         return urlparse(self.url).hostname or self.url
     @property
     def html_summary(self):
         return markdown(self.summary)
+
+    def __unicode__(self):
+        return u'Link %d: %s' % (self.id, self.title)
 
 class Tag(db.Model):
     __tablename__ = 'tag'
@@ -114,18 +161,6 @@ class Tag(db.Model):
     )
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-class LinkTag(db.Model):
-    __tablename__ = 'link_tag'
-    __table_args__ = (
-        db.UniqueConstraint('tag_id', 'link_id', name='ux_link_tag'),
-        db.Index('ix_link', 'link_id'),
-    )
-    id = db.Column(db.Integer, primary_key=True)
-    tag_id = db.Column(db.Integer, nullable=False)
-    link_id = db.Column(db.Integer, nullable=False)
-    weight = db.Column(db.Integer, nullable=False, default=1)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class UserLinkTag(db.Model):
@@ -139,10 +174,10 @@ class User(db.Model, UserMixin):
 
     __tablename__ = 'user'
     __table_args__ = (
-        db.UniqueConstraint('username', name='ux_username'),
-        db.UniqueConstraint('email', name='ux_email'),
-        db.UniqueConstraint('mobile', name='ux_mobile'),
-        db.UniqueConstraint('auth_token', name='ux_auth_token'),
+        db.UniqueConstraint('username', name='ux_user_username'),
+        db.UniqueConstraint('email', name='ux_user_email'),
+        db.UniqueConstraint('mobile', name='ux_user_mobile'),
+        db.UniqueConstraint('auth_token', name='ux_user_auth_token'),
     )
 
     id = db.Column(db.Integer(), primary_key=True)
@@ -157,14 +192,50 @@ class User(db.Model, UserMixin):
     auth_token = db.Column(db.String(128))
     active = db.Column(db.Boolean(), nullable=False, server_default='0')
 
+    roles = db.relationship(
+        'Role', secondary='user_roles',
+        backref=db.backref('users', lazy='dynamic')
+    )
+    links = db.relationship('Link', backref='links', lazy='dynamic')
+    topics = db.relationship('Topic', backref='topics', lazy='dynamic')
+    issues = db.relationship('Issue', backref='issues', lazy='dynamic')
+
+    def __unicode__(self):
+        return u'User %d: %s' % (self.id, self.username)
+
 class UserInvitation(db.Model):
     __tablename__ = 'user_invite'
     __table_args__ = (
-        db.UniqueConstraint('email', name='ux_email'),
-        db.UniqueConstraint('token', name='ux_token'),
+        db.UniqueConstraint('email', name='ux_user_invite_email'),
+        db.UniqueConstraint('token', name='ux_user_invite_token'),
+        db.ForeignKeyConstraint(
+            ['invited_by_user_id'], ['user.id'], name='fk_user_invitation_invited_by_user',
+        ),
     )
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), nullable=False)
-    invited_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    invited_by_user_id = db.Column(db.Integer, nullable=False)
     token = db.Column(db.String(100), nullable=False, server_default='')
     created_at = db.Column(db.DateTime(), default=datetime.utcnow)
+
+class Role(db.Model):
+    __tablename__ = 'role'
+    __table_args__ = (
+        db.UniqueConstraint('name', name='ux_role_name'),
+    )
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50))
+
+class UserRoles(db.Model):
+    __tablename__ = 'user_roles'
+    __table_args__ = (
+        db.ForeignKeyConstraint(
+            ['user_id'], ['user.id'], ondelete='CASCADE', name='fk_user_roles_user'
+        ),
+        db.ForeignKeyConstraint(
+            ['role_id'], ['role.id'], ondelete='CASCADE', name='fk_user_roles_role'
+        ),
+    )
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), nullable=False)
+    role_id = db.Column(db.Integer(), nullable=False)
