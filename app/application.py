@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from flask import Flask
 from flask_nav.elements import Navbar, View
 from flask_user import SQLAlchemyAdapter
@@ -16,7 +17,16 @@ from app.utils.jinja_tests import TESTS
 
 def create_app(config_file=None):
     app = Flask('app')
+
     AppConfig(app, config_file)
+
+    stream = logging.StreamHandler()
+    stream.setFormatter(logging.Formatter(
+        '%(name)s %(levelname)s %(asctime)s "%(message)s"'
+    ))
+    admin_logger = logging.getLogger('app.admin')
+    admin_logger.setLevel(logging.INFO)
+    admin_logger.addHandler(stream)
 
     db.app = app
     db.init_app(app)
