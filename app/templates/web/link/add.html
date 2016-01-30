@@ -17,13 +17,17 @@
 {% endblock %}
 
 {% block scripts %}
-<link rel="stylesheet" href="//cdn.jsdelivr.net/editor/0.1.0/editor.css">
-<script src="//cdn.jsdelivr.net/editor/0.1.0/editor.js"></script>
-<script src="//cdn.jsdelivr.net/editor/0.1.0/marked.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script>
- var editor = new Editor({
-   element: document.getElementById('summary')
+ var editor = new SimpleMDE({
+   element: document.getElementById('summary'),
+   spellChecker: false,
+   autofocus: true,
  });
- editor.render();
+ editor.codemirror.on('change', function() {
+   var text = editor.value();
+   document.getElementById('summary').innerHTML = text;
+ });
 </script>
 {% endblock %}
