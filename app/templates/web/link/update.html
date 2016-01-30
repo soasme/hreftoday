@@ -1,17 +1,7 @@
-{% extends "web/layout.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% extends "web/link/add.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Update Link{% endblock %}
 
-{% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-md-8">
-      <h1>Edit "{{ link.title }}"</h1>
-      {{ wtf.quick_form(form) }}
-    </div>
-    <div class="col-md-4">
-    </div>
-  </div>
-</div>
+{% block content_title %}
+Edit "{{ link.title }}"
 {% endblock %}

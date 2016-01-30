@@ -7,11 +7,23 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8">
-      <h1>Add link</h1>
+      <h1>{% block content_title %}Add Link{% endblock %}</h1>
       {{ wtf.quick_form(form) }}
     </div>
     <div class="col-md-4">
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="//cdn.jsdelivr.net/editor/0.1.0/editor.css">
+<script src="//cdn.jsdelivr.net/editor/0.1.0/editor.js"></script>
+<script src="//cdn.jsdelivr.net/editor/0.1.0/marked.js"></script>
+<script>
+ var editor = new Editor({
+   element: document.getElementById('summary')
+ });
+ editor.render();
+</script>
 {% endblock %}
