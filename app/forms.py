@@ -37,7 +37,7 @@ class DeleteTopicForm(DeletableForm):
 
 class IssueForm(Form):
     title = StringField('Title', validators=[DataRequired(), Length(max=128)])
-    submit = SubmitField('Add Issue')
+    submit = SubmitField('Save')
 
 class DeleteIssueForm(DeletableForm):
     pass

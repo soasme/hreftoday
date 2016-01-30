@@ -57,6 +57,7 @@ def update_issue(id, issue):
     return save_form_obj(
         db, IssueForm, issue,
         build_next=lambda form, issue: url_for('web.get_issue', id=issue.id),
+        before_render_map=['obj->issue'],
     )
 
 @bp.route('/issues/<int:id>')

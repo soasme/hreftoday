@@ -1,17 +1,5 @@
-{% extends "web/layout.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% extends "web/issue/add.html" %}
 
 {% block title %}Update Issue{% endblock %}
 
-{% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-md-8">
-      <h1>Add Issue</h1>
-      {{ wtf.quick_form(form) }}
-    </div>
-    <div class="col-md-4">
-    </div>
-  </div>
-</div>
-{% endblock %}
+{% block content_title %}Update "{{ issue.title }}"{% endblock %}
