@@ -6,3 +6,4 @@ from . import explore
 from . import topics
 from . import issue
 from . import link
+from . import info
