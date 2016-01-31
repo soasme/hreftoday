@@ -1,0 +1,18 @@
+{% macro site_footer() %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      <small>© 2016 href.today, all rights reserved</small>
+    </div>
+    <div class="col-sm-8">
+      <ul class="list-inline">
+        <li>
+          <small>
+            <a href="{{ url_for('web.aboutus')}}">About Us</a>
+          </small>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endmacro %}
