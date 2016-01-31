@@ -1,4 +1,5 @@
 {% extends "web/layout.html" %}
+{% from "web/widgets/share.html" import share_button %}
 
 {% block title %}{{ link.title }}{% endblock %}
 
@@ -42,6 +43,11 @@
                ><i class="glyphicon glyphicon-share-alt"></i> {{ link.domain }}</a>
           </p>
           <p>{{ link.html_summary | safe }}</p>
+          <div class="clearfix"></div>
+          <div class="pull-right">
+            {{ share_button() }}
+          </div>
+          <div class="clearfix"></div>
         </div>
       </div>
     </div>
