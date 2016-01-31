@@ -1,0 +1,20 @@
+{% macro related_books(ads) %}
+{% if ads %}
+<div class="panel">
+  <div class="panel-heading">
+    <h3>Recommend Reads</h3>
+  </div>
+  <ul class="list-group">
+    {% for ad in ads %}
+    <li class="list-group-item">
+      <a rel="nofollow" href="{{ ad.url }}" onclick="ga('send', 'event', 'Click Ad', 'Click Ad {{ ad.title }}');">
+        <i class="glyphicon glyphicon-book"></i>
+        {{ ad.title }}
+      </a>
+      <p>{{ ad.description }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endmacro %}
