@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from flask_nav.elements import View, RawTag
+
 # http://pythonhosted.org/flask-nav/api.html#flask_nav.elements.View
 # text, endpoint
-NAV_VIEWS = [
-    ('Home', 'web.index'),
-    ('Topics', 'web.get_topics'),
-    ('Explore', 'web.explore'),
+NAV_BAR_ITEMS = [
+    View('Href Today', 'web.get_topics'),
 ]
