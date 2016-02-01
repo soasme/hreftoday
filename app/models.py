@@ -147,6 +147,12 @@ class Link(db.Model):
     @property
     def domain(self):
         return urlparse(self.url).hostname or self.url
+
+    @property
+    def html_short_summary(self):
+        first_line = self.summary.splitlines()[0]
+        return markdown(first_line)
+
     @property
     def html_summary(self):
         return markdown(self.summary)
