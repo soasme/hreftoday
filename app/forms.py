@@ -24,7 +24,7 @@ class DeletableForm(Form):
 class LinkForm(Form):
     title = StringField('title', validators=[DataRequired(), Length(max=100)])
     url = StringField('url', validators=[DataRequired(), Length(max=1024)])
-    summary = TextAreaField('summary', validators=[DataRequired(), Length(min=100, max=2000)])
+    summary = TextAreaField('summary', validators=[DataRequired(), Length(min=100, max=65535)])
     submit = SubmitField('Save')
 
 class TopicForm(Form):
