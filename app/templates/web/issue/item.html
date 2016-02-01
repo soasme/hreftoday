@@ -46,7 +46,11 @@
             <a href="{{ url_for('web.get_link', id=link.id) }}"
                class="lead"
                >{{ link.title }}</a>
-            <p>{{ link.html_short_summary | safe }}</p>
+            <p>
+              {{ link.html_short_summary | safe }}
+
+              <a href="{{ url_for('web.get_link', id=link.id) }}">Read more</a>
+            </p>
           </li>
           {% endfor %}
         </ul>
