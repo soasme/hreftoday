@@ -3,6 +3,11 @@
 {% import "bootstrap/google.html" as bootstrap_google %}
 {% import "web/widgets/footer.html" as widget_footer %}
 
+{% block metas %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+{% endblock %}
+
 {% block body -%}
 
 {% block navbar %}
