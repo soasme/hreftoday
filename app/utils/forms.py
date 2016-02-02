@@ -2,6 +2,7 @@
 
 from flask import _app_ctx_stack as stack, abort, redirect, url_for
 from functools import wraps
+from sqlalchemy.exc import IntegrityError
 from werkzeug.local import LocalProxy
 
 
@@ -57,14 +58,20 @@ def save_form_obj(db,
                   after_populate=None,
                   before_redirect=None,
                   before_render=None,
-                  before_render_map=None):
+                  before_render_map=None,
+                  on_integrity_error=None,):
     form = form_class(obj=obj)
     if form.validate_on_submit():
         if before_populate:
             before_populate(form)
         form.populate_obj(obj)
         db.session.add(obj)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            if on_integrity_error:
+                on_integrity_error(form)
         if after_populate:
             after_populate(form)
         if before_redirect:
