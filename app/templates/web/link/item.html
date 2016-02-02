@@ -2,6 +2,7 @@
 {% from "web/widgets/share.html" import share_button %}
 {% from "web/widgets/ad.html" import related_books %}
 {% from "web/widgets/apply_for_trial.html" import apply_for_trial %}
+{% from "web/widgets/comment.html" import comments %}
 
 {% block title %}{{ link.title }}{% endblock %}
 
@@ -50,6 +51,7 @@
             {{ share_button() }}
           </div>
           <div class="clearfix"></div>
+          {{ comments() }}
         </div>
       </div>
     </div>
