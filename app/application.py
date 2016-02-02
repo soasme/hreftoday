@@ -10,6 +10,7 @@ from flask_appconfig.env import from_envvars
 from app.core import sentry
 from app.core import db, nav, bootstrap, user_manager, login_manager, mail, celery, admin
 from app.views import web
+from app.blueprints import trial
 from app.views.admin import AdAdminView, LinkAdminView, IssueAdminView
 from app.models import User, UserInvitation, Ad, Link, Issue
 from app.consts import NAV_BAR_ITEMS
@@ -64,6 +65,8 @@ def create_app(config_file=None):
         db_adapter=SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation),
         login_manager=login_manager
     )
+
+    app.register_blueprint(trial.bp, url_prefix='/trial')
     app.register_blueprint(web.bp)
 
     for jinja_filter in FILTERS:
