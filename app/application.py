@@ -8,7 +8,7 @@ from flask_user import SQLAlchemyAdapter
 from flask_appconfig import AppConfig
 from flask_appconfig.env import from_envvars
 from app.core import sentry
-from app.core import db, nav, bootstrap, user_manager, login_manager, mail, celery, admin
+from app.core import db, nav, bootstrap, user_manager, login_manager, mail, celery, admin, cache
 from app.views import web
 from app.blueprints import trial
 from app.views.admin import AdAdminView, LinkAdminView, IssueAdminView
@@ -47,6 +47,9 @@ def create_app(config_file=None):
     mail.app = app
     mail.init_app(app)
 
+    cache.app = app
+    cache.init_app(app)
+
     if not app.debug:
         sentry.app = app
         sentry.init_app(app)
@@ -56,6 +59,7 @@ def create_app(config_file=None):
     admin.add_view(AdAdminView(Ad, db.session))
     admin.add_view(LinkAdminView(Link, db.session))
     admin.add_view(IssueAdminView(Issue, db.session))
+    admin.add_view(trial.TrialEmailAdminView(trial.TrialEmail, db.session))
 
     #celery.app = app
     #celery.init_app(app)

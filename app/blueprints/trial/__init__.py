@@ -3,12 +3,14 @@
 from datetime import datetime
 from flask import url_for, Blueprint, flash
 from flask_wtf import Form
+from flask_admin.contrib.sqla import ModelView
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Email
 from app.core import db
 from app.utils.view import templated
 from app.utils.forms import save_form_obj
 from app.utils.transaction import transaction
+from app.utils.user import admin_required
 
 
 bp = Blueprint('trial', __name__, template_folder='templates')
@@ -29,6 +31,12 @@ class TrialEmail(db.Model):
 class TrialEmailForm(Form):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Apply')
+
+class TrialEmailAdminView(ModelView):
+
+    def is_accessible(self):
+        admin_required()
+        return True
 
 
 @bp.route('/', methods=['GET', 'POST'])
