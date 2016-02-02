@@ -1,6 +1,7 @@
 {% extends "web/layout.html" %}
 {% from "web/widgets/share.html" import share_button %}
 {% from "web/widgets/ad.html" import related_books %}
+{% from "web/widgets/apply_for_trial.html" import apply_for_trial %}
 
 {% block title %}{{ link.title }}{% endblock %}
 
@@ -53,6 +54,7 @@
       </div>
     </div>
     <div class="col-md-4">
+      {{ apply_for_trial() }}
       {{ related_books(ads) }}
     </div>
   </div>
