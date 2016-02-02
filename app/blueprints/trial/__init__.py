@@ -41,6 +41,6 @@ def add_trial():
         build_next=lambda form, trial_email: url_for('trial.add_trial'),
         before_render_map=['obj->trial_email'],
         before_redirect=lambda form: flash(
-            'Your email has added to list! Please wait for our invitation email.', 'success'
+            'Your email has been added to list! Please wait for our invitation email.', 'success'
         ),
     )
