@@ -64,6 +64,8 @@ def update_issue(id, issue):
 @templated('web/issue/item.html')
 def get_issue(id):
     issue = Issue.query.get_or_404(id)
+    if not issue.serial and (current_user.is_anonymous or current_user.id != issue.user_id):
+        abort(404)
     topic = issue.topic
     links = issue.links[:5]
     ads = set()
