@@ -12,5 +12,6 @@ def not_found(e):
     return render_template('web/errors/404.html')
 
 @bp.app_errorhandler(503)
+@bp.app_errorhandler(500)
 def service_unavailable(e):
     return render_template('web/errors/503.html')
