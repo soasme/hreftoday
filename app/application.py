@@ -7,6 +7,7 @@ from flask_nav.elements import Navbar, View
 from flask_user import SQLAlchemyAdapter
 from flask_appconfig import AppConfig
 from flask_appconfig.env import from_envvars
+from flask_sslify import SSLify
 from app.core import sentry
 from app.core import db, nav, bootstrap, user_manager, login_manager, mail, celery, admin, cache
 from app.views import web
@@ -23,6 +24,8 @@ def create_app(config_file=None):
     app = Flask('app')
 
     AppConfig(app, config_file)
+
+    SSLify(app)
 
     stream = logging.StreamHandler()
     stream.setFormatter(logging.Formatter(
