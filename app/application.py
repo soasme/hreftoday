@@ -13,10 +13,11 @@ from app.views import web
 from app.blueprints import trial
 from app.views.admin import AdAdminView, LinkAdminView, IssueAdminView
 from app.models import User, UserInvitation, Ad, Link, Issue
-from app.consts import NAV_BAR_ITEMS
+from app.consts import get_navbar
 from app.utils.filters import FILTERS
 from app.utils.jinja_tests import TESTS
 from app.utils.navigation import Renderer
+from app.utils.navbar_renderer import TwoSideRenderer
 
 def create_app(config_file=None):
     app = Flask('app')
@@ -38,7 +39,8 @@ def create_app(config_file=None):
     bootstrap.init_app(app)
 
     nav.app = app
-    nav.register_element('top', Navbar('', *NAV_BAR_ITEMS))
+    nav.register_element('top', get_navbar)
+    register_renderer(app, 'twoside', TwoSideRenderer)
     nav.init_app(app)
 
     login_manager.app = app
