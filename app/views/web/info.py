@@ -18,8 +18,11 @@ def contact():
 
 @bp.route('/.well-known/acme-challenge/<key>')
 def acme_challenge(key):
-    if key != current_app.config['ACME_CHALLENGE_KEY']:
+    keys = current_app.config['ACME_CHALLENGE_KEY'].split()
+    if key not in keys:
         abort(404)
-    resp = make_response(current_app.config['ACME_CHALLENGE_VALUE'])
+    values = current_app.config['ACME_CHALLENGE_VALUE'].split()
+    value = values[keys.index(key)]
+    resp = make_response(value)
     resp.content_type = 'text/plain'
     return resp
