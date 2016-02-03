@@ -7,3 +7,4 @@ from . import topics
 from . import issue
 from . import link
 from . import info
+from . import errors
