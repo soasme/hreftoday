@@ -10,6 +10,7 @@ from flask_celery import Celery
 from raven.contrib.flask import Sentry
 from flask_admin import Admin
 from flask_cache import Cache
+from flask_oauthlib.provider import OAuth2Provider
 
 db = SQLAlchemy()
 nav = Nav()
@@ -21,3 +22,4 @@ celery = Celery()
 sentry = Sentry()
 admin = Admin(template_mode='bootstrap3')
 cache = Cache()
+oauth = OAuth2Provider()

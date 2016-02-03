@@ -5,11 +5,16 @@ from flask import Flask, url_for
 from flask_nav import register_renderer
 from flask_nav.elements import Navbar, View
 from flask_user import SQLAlchemyAdapter
+from flask_login import current_user
 from flask_appconfig import AppConfig
 from flask_appconfig.env import from_envvars
 from flask_sslify import SSLify
+from flask_oauthlib.contrib.oauth2 import bind_sqlalchemy
 from app.core import sentry
-from app.core import db, nav, bootstrap, user_manager, login_manager, mail, celery, admin, cache
+from app.core import (
+    db, nav, bootstrap, user_manager, login_manager,
+    mail, celery, admin, cache, oauth
+)
 from app.views import web
 from app.blueprints import trial
 from app.views.admin import AdAdminView, LinkAdminView, IssueAdminView
@@ -54,6 +59,15 @@ def create_app(config_file=None):
 
     cache.app = app
     cache.init_app(app)
+
+    oauth.app = app
+    oauth.init_app(app)
+    bind_sqlalchemy(oauth, db.session,
+                    user=User,
+                    client=oauth2.Client,
+                    token=oauth2.Token,
+                    grant=oauth2.Grant,
+                    current_user=lambda: current_user)
 
     if not app.debug:
         sentry.app = app
