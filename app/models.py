@@ -98,7 +98,7 @@ class Link(db.Model):
     )
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    topic_id = db.Column(db.Integer)
+    topic_id = db.Column(db.Integer, nullable=False)
     title = db.Column(db.String(128), nullable=False)
     url = db.Column(db.String(1024), nullable=False)
     cover = db.Column(db.String(128))
