@@ -34,16 +34,6 @@ class TopicForm(Form):
 class DeleteTopicForm(DeletableForm):
     pass
 
-class IssueForm(Form):
-    title = StringField('Title', validators=[DataRequired(), Length(max=128)])
-    submit = SubmitField('Save')
-
-class DeleteIssueForm(DeletableForm):
-    pass
-
-class PublishIssueForm(Form):
-    submit = SubmitField('Publish Issue')
-
 class FollowTopicForm(Form):
     submit = SubmitField('Follow Topic')
 
