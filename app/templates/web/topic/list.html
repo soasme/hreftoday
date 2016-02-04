@@ -21,7 +21,7 @@
         <ul class="list-group">
           {% for topic in pagination.items %}
           <li class="list-group-item">
-            <a href="{{ url_for('web.get_topic_issues', id=topic.id) }}"> {{topic.title}} </a>
+            <a href="{{ url_for('web.get_topic_links', id=topic.id) }}"> {{topic.title}} </a>
             <div class="pull-right">
               <a href="{{ url_for('web.update_topic', id=topic.id) }}">
                 <small>Edit</small>
