@@ -30,7 +30,7 @@ def add_link(id, topic):
     raise Exception('FIXME: this is broken.')
     link = Link(
         user_id=current_user.id,
-        issue_id=issue.id
+        topic_id=topic.id,
     )
     return save_form_obj(
         db, LinkForm, link,
