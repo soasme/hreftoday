@@ -27,7 +27,6 @@ def get_link(id):
 @login_required
 @ensure_resource(Topic)
 def add_link(id, topic):
-    raise Exception('FIXME: this is broken.')
     link = Link(
         user_id=current_user.id,
         topic_id=topic.id,
