@@ -21,23 +21,6 @@
             </div>
             {% endif %}
           </h1>
-          <ol class="breadcrumb">
-            <li>
-              <a href="{{ url_for('web.get_topic_issues', id=issue.topic_id) }}"
-                 >{{ issue.topic.title }}</a>
-            </li>
-            <li>
-              <a href="{{ url_for('web.get_issue', id=issue.id) }}">
-                {% if issue.serial %}
-                <span>No. {{ issue.serial }}</span>
-                {% endif %}
-                <span>{{ issue.title }}</span>
-              </a>
-            </li>
-            <li class="active">
-              {{ link.title }}
-            </li>
-          </ol>
         </div>
         <div class="panel-body">
           <p>
