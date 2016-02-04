@@ -22,9 +22,6 @@ class AdminModelView(ModelView):
 class AdAdminView(AdminModelView):
     column_searchable_list = ('asin', )
 
-class IssueAdminView(AdminModelView):
-    pass
-
 class LinkAdminView(AdminModelView):
     column_auto_select_related = True
     column_select_related_list = ('links', 'issue', )

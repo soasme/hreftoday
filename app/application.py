@@ -17,7 +17,7 @@ from app.core import (
 )
 from app.views import web
 from app.blueprints import trial, oauth2
-from app.views.admin import AdAdminView, LinkAdminView, IssueAdminView
+from app.views.admin import AdAdminView, LinkAdminView
 from app.models import User, UserInvitation, Ad, Link, Issue
 from app.consts import get_navbar
 from app.utils.filters import FILTERS
@@ -77,7 +77,6 @@ def create_app(config_file=None):
     admin.init_app(app)
     admin.add_view(AdAdminView(Ad, db.session))
     admin.add_view(LinkAdminView(Link, db.session))
-    admin.add_view(IssueAdminView(Issue, db.session))
     admin.add_view(trial.TrialEmailAdminView(trial.TrialEmail, db.session))
 
     #celery.app = app
