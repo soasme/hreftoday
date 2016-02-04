@@ -12,6 +12,16 @@
     <div class="col-md-8">
       <div class="panel">
         <div class="panel-heading">
+          <nav>
+            <ul class="pager">
+              <li class="previous">
+                <a href="{{ url_for('web.get_topic', id=link.topic_id)}}">
+                  <i class="glyphicon glyphicon-chevron-left"></i>
+                  <span>Back</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
           <h1>
             {{ link.title }}
             {% if current_user.id == link.user_id %}
