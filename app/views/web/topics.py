@@ -32,7 +32,7 @@ def add_topic():
     topic = Topic(user_id=current_user.id)
     return save_form_obj(
         db, TopicForm, topic,
-        build_next=lambda form, topic: url_for('web.get_topic_issues', id=topic.id),
+        build_next=lambda form, topic: url_for('web.get_topic', id=topic.id),
         before_redirect=lambda form: flash("Topic has been added.", "success"),
     )
 
@@ -55,7 +55,7 @@ def update_topic(id, topic):
         db,
         TopicForm,
         obj=topic,
-        build_next=lambda form, topic: url_for('web.get_topic_issues', id=id),
+        build_next=lambda form, topic: url_for('web.get_topic', id=id),
         before_render_map=['obj->topic'],
         before_redirect=lambda form: flash("Topic has been updated.", "success"),
     )
