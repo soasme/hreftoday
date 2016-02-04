@@ -6,7 +6,7 @@ from app.core import db
 from app.utils.transaction import transaction
 from app.utils.view import ensure_resource, templated
 from app.utils.forms import save_form_obj
-from app.models import Link, Issue
+from app.models import Link, Issue, Topic
 from app.forms import LinkForm
 
 from .core import bp
@@ -15,21 +15,19 @@ from .core import bp
 @templated('web/link/item.html')
 def get_link(id):
     link = Link.query.get_or_404(id)
-    issue = link.issue
     return dict(
         link=link,
         tags=[tag for tag in link.tags],
-        issue=issue,
-        topic=issue.topic,
         ads=link.ads,
     )
 
-@bp.route('/issues/<int:id>/links', methods=['GET', 'POST'])
+@bp.route('/topics/<int:id>/links', methods=['GET', 'POST'])
 @templated('web/link/add.html')
 @transaction(db)
 @login_required
-@ensure_resource(Issue)
-def add_issue_link(id, issue):
+@ensure_resource(Topic)
+def add_link(id, topic):
+    raise Exception('FIXME: this is broken.')
     link = Link(
         user_id=current_user.id,
         issue_id=issue.id
