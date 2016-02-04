@@ -18,7 +18,7 @@ from app.core import (
 from app.views import web
 from app.blueprints import trial, oauth2
 from app.views.admin import AdAdminView, LinkAdminView
-from app.models import User, UserInvitation, Ad, Link, Issue
+from app.models import User, UserInvitation, Ad, Link
 from app.consts import get_navbar
 from app.utils.filters import FILTERS
 from app.utils.jinja_tests import TESTS

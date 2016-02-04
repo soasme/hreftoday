@@ -5,7 +5,7 @@ from flask import abort, request
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from flask_user import roles_required
-from app.models import Ad, Issue, Link
+from app.models import Ad, Link
 from app.utils.user import admin_required
 
 # Flask and Flask-SQLAlchemy initialization here

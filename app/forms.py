@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from app.models import Issue
 from flask_wtf import Form
 from wtforms import StringField, HiddenField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Length, ValidationError
