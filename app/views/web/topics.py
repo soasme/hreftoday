@@ -36,6 +36,14 @@ def add_topic():
         before_redirect=lambda form: flash("Topic has been added.", "success"),
     )
 
+@bp.route('/topics/<int:id>')
+@templated('web/topic/item.html')
+@ensure_resource(Topic)
+def get_topic(id, topic):
+    return dict(
+        topic=topic,
+    )
+
 @bp.route('/topics/<int:id>/update', methods=['GET', 'POST'])
 @transaction(db)
 @login_required
