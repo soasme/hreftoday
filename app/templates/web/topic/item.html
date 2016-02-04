@@ -1,5 +1,6 @@
 {% extends "web/layout.html" %}
 {% from "bootstrap/pagination.html" import render_pagination %}
+{% from "web/widgets/ad.html" import related_books %}
 
 {% block title %}Home{% endblock %}
 
@@ -46,6 +47,7 @@
     </div>
   </div>
   <div class="col-md-4">
+    {{ related_books(ads) }}
   </div>
 </div>
 {% endblock %}

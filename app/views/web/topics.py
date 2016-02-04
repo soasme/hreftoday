@@ -2,11 +2,12 @@
 
 from flask import url_for, redirect, render_template, flash, request
 from flask_login import current_user, login_required
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from app.utils.forms import save_form_obj
 from app.utils.view import templated, ensure_resource, ensure_owner, redirect_to
 from app.utils.transaction import transaction
-from app.models import Topic, TopicFollow, Link
+from app.models import Topic, TopicFollow, Link, Ad
 from app.forms import TopicForm, DeleteTopicForm
 from app.core import db
 from .core import bp
@@ -42,9 +43,11 @@ def get_topic(id):
     topic = Topic.get_or_404(id)
     page = request.args.get('page', type=int, default=1)
     links = topic.links.order_by(Link.created_at.desc()).paginate(page)
+    ads = Ad.query.order_by(func.random()).limit(3).all()
     return dict(
         topic=topic,
         links=links,
+        ads=ads,
     )
 
 @bp.route('/topics/<int:id>/update', methods=['GET', 'POST'])
