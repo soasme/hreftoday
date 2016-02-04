@@ -36,10 +36,6 @@ class Topic(db.Model, DeletableMixin):
     description = db.Column(db.Text, nullable=False, default='')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    issues = db.relationship(
-        'Issue', backref='topic', lazy='dynamic',
-    )
-
     def __unicode__(self):
         return u'Topic %d: %s' % (self.id, self.title)
 
@@ -90,44 +86,19 @@ class TopicFollow(db.Model):
     topic_id = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-class Issue(db.Model):
-    __tablename__ = 'issue'
-    __table_args__ = (
-        db.UniqueConstraint('topic_id', 'serial', name='ux_issue_topic_serial'),
-        db.ForeignKeyConstraint(
-            ['user_id'], ['user.id'], name='fk_issue_user',
-        ),
-        db.ForeignKeyConstraint(
-            ['topic_id'], ['topic.id'], name='fk_issue_topic',
-        )
-    )
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    topic_id = db.Column(db.Integer, nullable=False)
-    title = db.Column(db.String(128), nullable=False)
-    serial = db.Column(db.Integer)
-    published_at = db.Column(db.DateTime)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    links = db.relationship('Link', backref='issue', lazy='dynamic')
-
-    def __unicode__(self):
-        return u'Issue %d: %s' % (self.id, self.title)
-
 class Link(db.Model):
     __tablename__ = 'link'
     __table_args__ = (
-        db.Index('ix_issue', 'issue_id'),
         db.ForeignKeyConstraint(
             ['user_id'], ['user.id'], name='fk_link_user',
         ),
         db.ForeignKeyConstraint(
-            ['issue_id'], ['issue.id'], name='fk_link_issue',
+            ['topic_id'], ['topic.id'], name='fk_link_topic',
         ),
     )
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    issue_id = db.Column(db.Integer, nullable=False)
+    topic_id = db.Column(db.Integer)
     title = db.Column(db.String(128), nullable=False)
     url = db.Column(db.String(1024), nullable=False)
     cover = db.Column(db.String(128))
@@ -204,7 +175,6 @@ class User(db.Model, UserMixin):
     )
     links = db.relationship('Link', backref='links', lazy='dynamic')
     topics = db.relationship('Topic', backref='topics', lazy='dynamic')
-    issues = db.relationship('Issue', backref='issues', lazy='dynamic')
 
     def __unicode__(self):
         return u'User %d: %s' % (self.id, self.username)
