@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flask import url_for, redirect, render_template, flash
+from flask import url_for, redirect, render_template, flash, request
 from flask_login import current_user, login_required
 from sqlalchemy.exc import IntegrityError
 from app.utils.forms import save_form_obj
 from app.utils.view import templated, ensure_resource, ensure_owner, redirect_to
 from app.utils.transaction import transaction
-from app.models import Topic, TopicFollow
+from app.models import Topic, TopicFollow, Link
 from app.forms import TopicForm, DeleteTopicForm
 from app.core import db
 from .core import bp
@@ -38,10 +38,13 @@ def add_topic():
 
 @bp.route('/topics/<int:id>')
 @templated('web/topic/item.html')
-@ensure_resource(Topic)
-def get_topic(id, topic):
+def get_topic(id):
+    topic = Topic.get_or_404(id)
+    page = request.args.get('page', type=int, default=1)
+    links = topic.links.order_by(Link.created_at.desc()).paginate(page)
     return dict(
         topic=topic,
+        links=links,
     )
 
 @bp.route('/topics/<int:id>/update', methods=['GET', 'POST'])

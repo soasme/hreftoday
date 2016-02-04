@@ -1,11 +1,49 @@
 {% extends "web/layout.html" %}
+{% from "bootstrap/pagination.html" import render_pagination %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 <div class="row">
   <div class="col-md-8">
-    <h1>{{ topic.title }}</h1>
+    <div class="panel">
+      <div class="panel-body">
+        <h1>{{ topic.title }}</h1>
+        <p>{{ topic.description }}</p>
+        {% if topic is belongs_to_me %}
+        <div class="owner-panel">
+          <a href="{{ url_for('web.add_link', id=topic.id) }}" class="btn btn-sm">Add Link</a>
+        </div>
+        {% endif %}
+      </div>
+      <ul class="list-group">
+        {% for link in links.items %}
+
+        {% if current_publish_date != link.created_at | dateformat %}
+        <li class="list-group-item">
+          <h4>{{ link.created_at | dateformat }}</h4>
+          {% set current_publish_date = link.created_at | dateformat %}
+        </li>
+        {% endif %}
+
+        <li class="list-group-item">
+          <a href="{{ url_for('web.get_link', id=link.id) }}"
+             class="lead">
+            <span>{{ link.title }}</span>
+          </a>
+          <span class="text-muted">
+            <small>({{ link.domain }})</small>
+          </span>
+          <p class="">
+            {{ link.html_short_summary | safe}}
+          </p>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="center-block">
+        {{ render_pagination(links) }}
+      </div>
+    </div>
   </div>
   <div class="col-md-4">
   </div>
