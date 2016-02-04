@@ -106,6 +106,10 @@ class Link(db.Model):
     keywords = db.Column(postgresql.ARRAY(db.String(32)), default=[])
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    topic = db.relationship(
+        'Topic',
+        backref=db.backref('links', lazy='dynamic'),
+    )
     ads = db.relationship(
         'Ad', secondary=link_ad,
         backref=db.backref('links', lazy='dynamic'),
