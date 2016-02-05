@@ -13,7 +13,7 @@ from flask_oauthlib.contrib.oauth2 import bind_sqlalchemy
 from app.core import sentry
 from app.core import (
     db, nav, bootstrap, user_manager, login_manager,
-    mail, celery, admin, cache, oauth
+    mail, celery, admin, cache, oauth, api_manager,
 )
 from app.views import web
 from app.blueprints import trial, oauth2
@@ -87,6 +87,9 @@ def create_app(config_file=None):
         db_adapter=SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation),
         login_manager=login_manager
     )
+
+    api_manager.app = app
+    api_manager.init_app(app)
 
     app.register_blueprint(trial.bp, url_prefix='/trial')
     app.register_blueprint(oauth2.view.bp, url_prefix='/oauth')
