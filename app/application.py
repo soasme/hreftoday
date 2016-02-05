@@ -14,6 +14,7 @@ from app.core import sentry
 from app.core import (
     db, nav, bootstrap, user_manager, login_manager,
     mail, celery, admin, cache, oauth, api_manager,
+    gravatar,
 )
 from app.views import web
 from app.blueprints import trial, oauth2
@@ -87,6 +88,9 @@ def create_app(config_file=None):
         db_adapter=SQLAlchemyAdapter(db, User, UserInvitationClass=UserInvitation),
         login_manager=login_manager
     )
+
+    gravatar.app = app
+    gravatar.init_app(app)
 
     api_manager.app = app
     api_manager.init_app(app)

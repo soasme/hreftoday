@@ -36,6 +36,11 @@ class Topic(db.Model, DeletableMixin):
     description = db.Column(db.Text, nullable=False, default='')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    user = db.relationship(
+        'User',
+        backref=db.backref('topics', lazy='dynamic'),
+    )
+
     def __unicode__(self):
         return u'Topic %d: %s' % (self.id, self.title)
 
@@ -178,7 +183,6 @@ class User(db.Model, UserMixin):
         backref=db.backref('users', lazy='dynamic')
     )
     links = db.relationship('Link', backref='links', lazy='dynamic')
-    topics = db.relationship('Topic', backref='topics', lazy='dynamic')
 
     def __unicode__(self):
         return u'User %d: %s' % (self.id, self.username)

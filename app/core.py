@@ -11,6 +11,7 @@ from raven.contrib.flask import Sentry
 from flask_admin import Admin
 from flask_cache import Cache
 from flask_oauthlib.provider import OAuth2Provider
+from flask_gravatar import Gravatar
 from flask_restless import APIManager
 
 db = SQLAlchemy()
@@ -24,4 +25,5 @@ sentry = Sentry()
 admin = Admin(template_mode='bootstrap3')
 cache = Cache()
 oauth = OAuth2Provider()
+gravatar = Gravatar()
 api_manager = APIManager(flask_sqlalchemy_db=db)

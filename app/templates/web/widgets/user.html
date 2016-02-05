@@ -1,0 +1,6 @@
+{% macro render_avatar(user) %}
+{% if user.email %}
+<img src="{{ user.email | gravatar(size="38") }}" class="img-circle">
+<span>{{ user.username }}</span>
+{% endif %}
+{% endmacro %}
