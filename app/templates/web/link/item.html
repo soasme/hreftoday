@@ -12,6 +12,7 @@
     <div class="col-md-8 col-md-offset-2">
       <div class="panel">
         <div class="panel-heading">
+          {% if link is belongs_to_me %}
           <nav>
             <ul class="pager">
               <li class="previous">
@@ -22,9 +23,10 @@
               </li>
             </ul>
           </nav>
+          {% endif %}
           <h1>
             {{ link.title }}
-            {% if current_user.id == link.user_id %}
+            {% if link is belongs_to_me %}
             <div class="pull-right btn-group">
               <a href="{{ url_for('web.update_link', id=link.id) }}"
                  class="btn btn-default btn-sm"><i class="glyphicon glyphicon-edit"></i></a>
