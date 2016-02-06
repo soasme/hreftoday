@@ -8,7 +8,7 @@ def get_navbar():
     navbar = Navbar('', *[
         View('Href Today', 'dashboard.get_links'),
     ])
-    navbar.logo = Logo('images/logo.png', 'web.get_topics')
+    navbar.logo = Logo('images/logo.png', 'dashboard.get_links')
     if current_user.is_anonymous:
         navbar.right_side_items = [View('Login', 'user.login')]
     else:
