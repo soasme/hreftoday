@@ -1,0 +1,24 @@
+{% macro dashboard_nav() %}
+<ul class="nav nav-pills nav-stacked">
+  <li role="presentation"
+      class="{% if request.endpoint == 'dashboard.get_links' %}active{% endif %}">
+    <a href="{{ url_for('dashboard.get_links') }}">My Links</a>
+  </li>
+  <li role="presentation">
+    <a href="#">My Tags</a>
+  </li>
+</ul>
+{% endmacro %}
+
+{% macro dashboard_back(url) %}
+<nav>
+  <ul class="pager">
+    <li class="previous">
+      <a href="{{ url or url_for('dashboard.get_links')}}">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        <span>Back</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+{% endmacro %}

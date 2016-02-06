@@ -1,0 +1,31 @@
+{% extends "web/dashboard_layout.html" %}
+{% from "web/widgets/dashboard.html" import dashboard_back %}
+
+{% block title %}{{ link.title }}{% endblock %}
+
+{% block dashboard_content %}
+<div class="row">
+  <div class="col-md-8">
+    <div class="panel">
+      <div class="panel-heading">
+        {{ dashboard_back() }}
+        <h1>
+          {{ link.title }}
+          <div class="pull-right btn-group">
+            <a href="{{ url_for('dashboard.update_link', id=link.id) }}"
+               class="btn btn-default btn-sm"><i class="glyphicon glyphicon-edit"></i></a>
+          </div>
+        </h1>
+      </div>
+      <div class="panel-body">
+        <p>
+          <a href="{{ link.url }}" class="btn btn-default" title="{{ link.title }}"
+             onclick="ga('send', 'event', 'Click Link', 'Click Link {{ link.title }}');"
+             ><i class="glyphicon glyphicon-share-alt"></i> {{ link.domain }}</a>
+        </p>
+        <p>{{ link.html_summary | safe }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

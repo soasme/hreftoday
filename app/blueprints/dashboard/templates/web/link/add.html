@@ -1,0 +1,31 @@
+{% extends "web/dashboard_layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% from "web/widgets/dashboard.html" import dashboard_back %}
+
+{% block title %}Add Link{% endblock %}
+
+{% block dashboard_content %}
+<div class="row">
+  <div class="col-md-8">
+    {{ dashboard_back() }}
+    <h1>{% block content_title %}Add Link{% endblock %}</h1>
+    {{ wtf.quick_form(form) }}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+ var editor = new SimpleMDE({
+   element: document.getElementById('summary'),
+   spellChecker: false,
+   autofocus: true,
+ });
+ editor.codemirror.on('change', function() {
+   var text = editor.value();
+   document.getElementById('summary').innerHTML = text;
+ });
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "web/dashboard_layout.html" %}
+
+{% from "bootstrap/pagination.html" import render_pagination %}
+
+{% block title %}My Links{% endblock %}
+
+{% block dashboard_content %}
+<div class="panel">
+  <div class="panel-body">
+    <h1>My Links</h1>
+    <div class="owner-panel">
+      <a href="{{ url_for('dashboard.add_link') }}" class="btn btn-sm">Add Link</a>
+    </div>
+  </div>
+  <ul class="list-group">
+    {% for link in links.items %}
+
+    {% if current_publish_date != link.created_at | dateformat %}
+    <li class="list-group-item">
+      <h4>{{ link.created_at | dateformat }}</h4>
+      {% set current_publish_date = link.created_at | dateformat %}
+    </li>
+    {% endif %}
+
+    <li class="list-group-item">
+      {{ render_link(link) }}
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="center-block">
+    {{ render_pagination(links) }}
+  </div>
+</div>
+{% endblock %}
+
+{% macro render_link(link) %}
+<a href="{{ url_for('dashboard.get_link', id=link.id) }}"
+   class="lead">
+  <span>{{ link.title }}</span>
+</a>
+<span class="text-muted">
+  <small>({{ link.domain }})</small>
+</span>
+<p class="">
+  {{ link.html_short_summary | safe}}
+</p>
+{% endmacro %}
