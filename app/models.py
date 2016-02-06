@@ -19,31 +19,6 @@ class DeletableMixin(object):
             abort(404)
         return obj
 
-class Topic(db.Model, DeletableMixin):
-    __tablename__ = 'topic'
-    __table_args__ = (
-        db.Index('ix_user', 'user_id'),
-        db.ForeignKeyConstraint(
-            ['user_id'],
-            ['user.id'],
-            name='fk_topic_user',
-        ),
-    )
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    title = db.Column(db.String(128), nullable=False)
-    description = db.Column(db.Text, nullable=False, default='')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    user = db.relationship(
-        'User',
-        backref=db.backref('topics', lazy='dynamic'),
-    )
-
-    def __unicode__(self):
-        return u'Topic %d: %s' % (self.id, self.title)
-
 class Ad(db.Model):
     __tablename__ = 'ad'
     __table_args__ = (
@@ -75,35 +50,15 @@ link_tag = db.Table(
     db.Column('created_at', db.DateTime, default=datetime.utcnow)
 )
 
-class TopicFollow(db.Model):
-    __tablename__ = 'topic_follow'
-    __table_args__ = (
-        db.UniqueConstraint('topic_id', 'user_id', name='ux_topic_follow_user_follow_topic'),
-        db.ForeignKeyConstraint(
-            ['user_id'], ['user.id'], name='fk_topic_follow_user',
-        ),
-        db.ForeignKeyConstraint(
-            ['topic_id'], ['topic.id'], name='fk_topic_follow_topic',
-        ),
-    )
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    topic_id = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
 class Link(db.Model):
     __tablename__ = 'link'
     __table_args__ = (
         db.ForeignKeyConstraint(
             ['user_id'], ['user.id'], name='fk_link_user',
         ),
-        db.ForeignKeyConstraint(
-            ['topic_id'], ['topic.id'], name='fk_link_topic',
-        ),
     )
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    topic_id = db.Column(db.Integer)
     title = db.Column(db.String(128), nullable=False)
     url = db.Column(db.String(1024), nullable=False)
     cover = db.Column(db.String(128))
@@ -111,10 +66,6 @@ class Link(db.Model):
     keywords = db.Column(postgresql.ARRAY(db.String(32)), default=[])
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    topic = db.relationship(
-        'Topic',
-        backref=db.backref('links', lazy='dynamic'),
-    )
     ads = db.relationship(
         'Ad', secondary=link_ad,
         backref=db.backref('links', lazy='dynamic'),
