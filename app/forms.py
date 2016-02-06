@@ -26,16 +26,6 @@ class LinkForm(Form):
     summary = TextAreaField('summary', validators=[DataRequired(), Length(min=100, max=65535)])
     submit = SubmitField('Save')
 
-class TopicForm(Form):
-    title = StringField('title', validators=[DataRequired(), Length(max=128)])
-    description = TextAreaField('description', validators=[DataRequired(), Length(max=1000)])
-    submit = SubmitField('Save')
-
-class DeleteTopicForm(DeletableForm):
-    pass
-
-class FollowTopicForm(Form):
-    submit = SubmitField('Follow Topic')
 
 class DeleteLinkForm(DeletableForm):
     pass
