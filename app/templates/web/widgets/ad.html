@@ -1,5 +1,5 @@
 {% macro related_books(ads) %}
-{% if ads %}
+{% if config.ENABLE_AD and ads %}
 <div class="panel">
   <div class="panel-heading">
     <h3>Related Books</h3>
