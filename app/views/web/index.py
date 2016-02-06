@@ -7,4 +7,4 @@ from .core import bp
 @bp.route('/')
 @login_required
 def index():
-    return redirect(url_for('web.get_topics'))
+    return redirect(url_for('dashboard.get_links'))
