@@ -108,7 +108,7 @@ venv/
 # PyBuilder
 target/
 
-app/.env
+app/*.env
 app/*.db
 
 # Elastic Beanstalk Files
