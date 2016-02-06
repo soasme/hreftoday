@@ -6,6 +6,19 @@
     <div class="col-md-8">
       <h1>Contact</h1>
       <p>If you have any problem, please contact <a href="mailto:{{ contact_email }}">{{ contact_email }}</a></p>
+      <form action="https://formspree.io/{{ contact_email }}" method="POST" class="form" role="form">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="text" name="email" class="form-control" placeholder="Email Address">
+        </div>
+        <div class="form-group">
+          <textarea type="text" name="content" class="form-control" rows="5" placeholder="What would you like to say?"></textarea>
+        </div>
+        <input type="hidden" name="_next" value="/" />
+        <input type="hidden" name="_subject" value="New submission!" />
+        <input type="text" name="_gotcha" style="display:none" />
+        <input type="submit" class="btn btn-default">
+      </form>
     </div>
   </div>
 </div>
