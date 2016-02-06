@@ -3,20 +3,10 @@
 from flask_script import Manager
 from datetime import datetime
 from app.core import db
-from app.models import Topic, User, Role
+from app.models import User, Role
 from app.utils.transaction import transaction
 
 Service = Manager('Perform service operation')
-
-@Service.command
-def revert_topic(id):
-    topic = Topic.query.get(id)
-    if topic:
-        topic.is_deleted = False
-        db.session.commit()
-        print 'Topic "%s" reverted' % topic.title
-    else:
-        print 'Not Found'
 
 @Service.command
 def set_role(id, role):
