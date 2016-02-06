@@ -17,7 +17,7 @@ from app.core import (
     gravatar,
 )
 from app.views import web
-from app.blueprints import trial, oauth2, social
+from app.blueprints import trial, oauth2, social, dashboard, share
 from app.views.admin import AdAdminView, LinkAdminView
 from app.models import User, UserInvitation, Ad, Link
 from app.consts import get_navbar
@@ -98,6 +98,8 @@ def create_app(config_file=None):
     app.register_blueprint(trial.bp, url_prefix='/trial')
     app.register_blueprint(oauth2.view.bp, url_prefix='/oauth')
     app.register_blueprint(social.bp, url_prefix='/social')
+    app.register_blueprint(dashboard.bp, url_prefix='/dashboard')
+    app.register_blueprint(share.bp, url_prefix='/share')
     app.register_blueprint(web.bp)
 
     for jinja_filter in FILTERS:
