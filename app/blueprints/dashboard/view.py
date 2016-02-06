@@ -6,7 +6,7 @@ from app.core import db, cache
 from app.utils.transaction import transaction
 from app.utils.view import ensure_resource, templated
 from app.utils.forms import save_form_obj
-from app.models import Link, Topic
+from app.models import Link
 from app.forms import LinkForm
 
 from .core import bp
