@@ -6,27 +6,45 @@ from app.core import db, cache
 from app.utils.transaction import transaction
 from app.utils.view import ensure_resource, templated
 from app.utils.forms import save_form_obj
-from app.models import Link
+from app.models import Link, Tag
 from app.forms import LinkForm
 
 from .core import bp
+from .utils import (
+    get_default_link_summary, get_default_url,
+    get_draft_links as _get_draft_links,
+    get_default_title,
+)
 
 @bp.route('/links/<int:id>')
 @templated('web/link/item.html')
-def get_link(id):
-    link = Link.query.get_or_404(id)
-    return dict(
-        link=link,
-        tags=[tag for tag in link.tags],
-        ads=link.ads,
-    )
+@ensure_resource(Link)
+def get_link(id, link):
+    return dict(link=link)
+
+@bp.route('/links/draft')
+@templated('web/link/list.html')
+def get_draft_links():
+    links = _get_draft_links().paginate(1)
+    return dict(links=links)
+
+@bp.route('/tags/<int:id>')
+@templated('web/tag/item.html')
+@ensure_resource(Tag)
+def get_tag(id, tag):
+    return dict(tag=tag)
 
 @bp.route('/links/add', methods=['GET', 'POST'])
 @templated('web/link/add.html')
 @transaction(db)
 @login_required
 def add_link():
-    link = Link(user_id=current_user.id)
+    link = Link(
+        user_id=current_user.id,
+        summary=get_default_link_summary(),
+        url=get_default_url(),
+        title=get_default_title(),
+    )
     return save_form_obj(
         db, LinkForm, link,
         build_next=lambda form, link: url_for('dashboard.get_link', id=link.id)
