@@ -73,6 +73,19 @@ def update_link(id, link):
         before_render_map=['obj->link'],
     )
 
+@bp.route('/links/<int:id>/delete_draft', methods=['POST'])
+@transaction(db)
+@login_required
+@ensure_resource(Link)
+def remove_link_from_draft(id, link):
+    draft = Draft.query.filter_by(user_id=current_user.id).first() or Draft(user_id=current_user.id)
+    return save_form_obj(
+        db, DeleteDraftLinkForm, draft,
+        build_next=lambda form, draft: request.referrer,
+        before_populate=lambda form: setattr(form, 'link_id', id),
+        before_redirect=lambda form: flash(u'Removed from draft', 'danger'),
+    )
+
 @bp.route('/links/<int:id>/draft', methods=['POST'])
 @transaction(db)
 @login_required
