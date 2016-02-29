@@ -1,5 +1,6 @@
 {% extends "web/dashboard_layout.html" %}
 {% from "web/widgets/dashboard.html" import dashboard_back %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}{{ link.title }}{% endblock %}
 
@@ -14,6 +15,7 @@
           <div class="pull-right btn-group">
             <a href="{{ url_for('dashboard.update_link', id=link.id) }}"
                class="btn btn-default btn-sm"><i class="glyphicon glyphicon-edit"></i></a>
+            {{ wtf.quick_form(add_draft, action=url_for('dashboard.add_link_to_draft', id=link.id)) }}
           </div>
         </h1>
       </div>
