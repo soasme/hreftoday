@@ -11,6 +11,12 @@
     <h1>{% block content_title %}Add Link{% endblock %}</h1>
     {{ wtf.quick_form(form) }}
   </div>
+  <div class="col-md-4">
+    {% for link in g.draft.links %}
+    <a href="{{ url_for('dashboard.get_link', id=link.id) }}">{{ link.title }}</a>
+    {{ wtf.quick_form(delete_draft, action=url_for('dashboard.remove_link_from_draft', id=link.id))}}
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}
 
