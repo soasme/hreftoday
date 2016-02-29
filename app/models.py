@@ -178,3 +178,14 @@ class UserRoles(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), nullable=False)
     role_id = db.Column(db.Integer(), nullable=False)
+
+class Draft(db.Model):
+    __tablename__ = 'draft'
+    __table_args__ = (
+        db.UniqueConstraint('user_id', name='ux_draft_user'),
+    )
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), nullable=False)
+    link_ids = db.Column(postgresql.ARRAY(db.Integer()), default=[])
+    created_at = db.Column(db.DateTime(), default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime(), default=datetime.utcnow)
