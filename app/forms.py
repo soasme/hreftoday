@@ -34,7 +34,9 @@ class DraftForm(Form):
     submit = SubmitField('Add to draft')
 
     def populate_obj(self, obj):
-        obj.link_ids = list(set(obj.link_ids + [self.link_id]))
+        link_ids = set(obj.link_ids or [])
+        link_ids.add(self.link_id)
+        obj.link_ids = list(link_ids)
 
 class DeleteDraftLinkForm(Form):
     submit = SubmitField('Delete from draft')
@@ -42,7 +44,7 @@ class DeleteDraftLinkForm(Form):
     def populate_obj(self, obj):
         if not obj:
             return
-        link_ids = set(obj.link_ids)
+        link_ids = set(obj.link_ids or [])
         if self.link_id in link_ids:
             link_ids.remove(self.link_id)
         obj.link_ids = list(link_ids)
