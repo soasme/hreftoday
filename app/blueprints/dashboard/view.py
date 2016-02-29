@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask import render_template, url_for, redirect, request
+from flask import render_template, url_for, redirect, request, g, flash
 from flask_login import current_user, login_required
 from app.core import db, cache
 from app.utils.transaction import transaction
 from app.utils.view import ensure_resource, templated
 from app.utils.forms import save_form_obj
-from app.models import Link, Tag
 from app.forms import LinkForm
+from app.models import Link, Tag, Draft
 
 from .core import bp
 from .utils import (
@@ -15,6 +15,12 @@ from .utils import (
     get_draft_links as _get_draft_links,
     get_default_title,
 )
+
+@bp.before_request
+def before_dashboard_request():
+    g.draft = Draft.query.filter_by(user_id=current_user.id).first()
+    g.draft = g.draft or Draft(user_id=current_user.id)
+    g.draft.links = Link.query.filter(Link.id.in_(g.draft.link_ids)).all()
 
 @bp.route('/links/<int:id>')
 @templated('web/link/item.html')
