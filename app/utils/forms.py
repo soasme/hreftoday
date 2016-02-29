@@ -81,10 +81,10 @@ def save_form_obj(db,
         form=form,
         obj=obj,
     )
-    if before_render:
-        return before_render(data)
     if before_render_map:
         for transition in before_render_map:
             from_, to_ = [_.strip() for _ in transition.split('->')]
             data[to_] = data.pop(from_, None)
+    if before_render:
+        return before_render(data)
     return data
