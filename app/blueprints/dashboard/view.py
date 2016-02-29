@@ -52,9 +52,13 @@ def add_link():
         url=get_default_url(),
         title=get_default_title(),
     )
+    def before_render(data):
+        data['delete_draft'] = DeleteDraftLinkForm()
+        return data
     return save_form_obj(
         db, LinkForm, link,
-        build_next=lambda form, link: url_for('dashboard.get_link', id=link.id)
+        build_next=lambda form, link: url_for('dashboard.get_link', id=link.id),
+        before_render=before_render,
     )
 
 @bp.route('/links/<int:id>/update', methods=['GET', 'POST'])
