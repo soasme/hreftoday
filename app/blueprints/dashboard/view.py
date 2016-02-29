@@ -6,8 +6,8 @@ from app.core import db, cache
 from app.utils.transaction import transaction
 from app.utils.view import ensure_resource, templated
 from app.utils.forms import save_form_obj
-from app.forms import LinkForm
 from app.models import Link, Tag, Draft
+from app.forms import LinkForm, DraftForm, DeleteDraftLinkForm
 
 from .core import bp
 from .utils import (
@@ -26,7 +26,8 @@ def before_dashboard_request():
 @templated('web/link/item.html')
 @ensure_resource(Link)
 def get_link(id, link):
-    return dict(link=link)
+    add_draft = DraftForm()
+    return dict(link=link, add_draft=add_draft)
 
 @bp.route('/links/draft')
 @templated('web/link/list.html')
