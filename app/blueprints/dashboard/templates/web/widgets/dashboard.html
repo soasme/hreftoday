@@ -5,7 +5,10 @@
     <a href="{{ url_for('dashboard.get_links') }}">My Links</a>
   </li>
   <li role="presentation">
-    <a href="#">My Tags</a>
+    <a href="{{ url_for('dashboard.add_link') }}"
+       class="{% if request.endpoint == 'dashboard.add_link' %}active{% endif %}">
+      Add Link
+    </a>
   </li>
 </ul>
 {% endmacro %}

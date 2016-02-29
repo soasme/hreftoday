@@ -8,9 +8,6 @@
 <div class="panel">
   <div class="panel-body">
     <h1>My Links</h1>
-    <div class="owner-panel">
-      <a href="{{ url_for('dashboard.add_link') }}" class="btn btn-sm">Add Link</a>
-    </div>
   </div>
   <ul class="list-group">
     {% for link in links.items %}
