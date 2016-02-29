@@ -20,7 +20,10 @@ from .utils import (
 def before_dashboard_request():
     g.draft = Draft.query.filter_by(user_id=current_user.id).first()
     g.draft = g.draft or Draft(user_id=current_user.id)
-    g.draft.links = Link.query.filter(Link.id.in_(g.draft.link_ids)).all()
+    if g.draft.link_ids:
+        g.draft.links = Link.query.filter(Link.id.in_(g.draft.link_ids)).all()
+    else:
+        g.draft.links = []
 
 @bp.route('/links/<int:id>')
 @templated('web/link/item.html')
