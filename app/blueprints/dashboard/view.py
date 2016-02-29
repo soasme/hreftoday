@@ -70,10 +70,14 @@ def add_link():
 @login_required
 @ensure_resource(Link)
 def update_link(id, link):
+    def before_render(data):
+        data['delete_draft'] = DeleteDraftLinkForm()
+        return data
     return save_form_obj(
         db, LinkForm, link,
         build_next=lambda form, link: url_for('dashboard.get_link', id=link.id),
         before_render_map=['obj->link'],
+        before_render=before_render,
     )
 
 @bp.route('/links/<int:id>/delete_draft', methods=['POST'])
