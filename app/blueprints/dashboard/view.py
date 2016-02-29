@@ -73,6 +73,26 @@ def update_link(id, link):
         before_render_map=['obj->link'],
     )
 
+@bp.route('/links/<int:id>/draft', methods=['POST'])
+@transaction(db)
+@login_required
+@ensure_resource(Link)
+def add_link_to_draft(id, link):
+    draft = Draft.query.filter_by(user_id=current_user.id).first() or Draft(user_id=current_user.id)
+    def append_to_draft(form):
+        draft = Draft.query.filter_by(user_id=current_user.id).first()
+        if id not in draft.link_ids:
+            draft.link_ids.append(id)
+        db.session.add(draft)
+        db.session.commit()
+    return save_form_obj(
+        db, DraftForm, draft,
+        build_next=lambda form, draft: request.referrer,
+        before_populate=lambda form: setattr(form, 'link_id', id),
+        before_redirect=lambda form: flash(u'Added to draft.', 'success'),
+        on_integrity_error=append_to_draft,
+    )
+
 
 @bp.route('/')
 @bp.route('/links')
