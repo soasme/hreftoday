@@ -17,7 +17,10 @@ from .utils import (
 )
 
 @bp.before_request
+@login_required
 def before_dashboard_request():
+    if current_user.is_anonymous:
+        return redirect(url_for('user.login'))
     g.draft = Draft.query.filter_by(user_id=current_user.id).first()
     g.draft = g.draft or Draft(user_id=current_user.id)
     if g.draft.link_ids:
