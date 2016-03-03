@@ -10,12 +10,11 @@
       Add Link
     </a>
   </li>
-  {% set draft_link_ids = g.draft.link_ids or [] %}
-  {% if g.draft.links %}
+  {% if g.draft_links_count %}
   <li role="presentation">
-    <a href="{{ url_for('dashboard.add_link', _draft=draft_link_ids) }}">
+    <a href="{{ url_for('dashboard.add_draft') }}">
       Add Draft
-      <span class="badge">{{ g.draft.links | length }}</span>
+      <span class="badge">{{ g.draft_links_count }}</span>
     </a>
   </li>
   {% endif %}

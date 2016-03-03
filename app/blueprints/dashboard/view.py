@@ -14,6 +14,7 @@ from .utils import (
     get_default_link_summary, get_default_url,
     get_draft_links as _get_draft_links,
     get_default_title,
+    get_draft_links_count,
 )
 
 @bp.before_request
@@ -21,12 +22,7 @@ from .utils import (
 def before_dashboard_request():
     if current_user.is_anonymous:
         return redirect(url_for('user.login'))
-    g.draft = Draft.query.filter_by(user_id=current_user.id).first()
-    g.draft = g.draft or Draft(user_id=current_user.id)
-    if g.draft.link_ids:
-        g.draft.links = Link.query.filter(Link.id.in_(g.draft.link_ids)).all()
-    else:
-        g.draft.links = []
+    g.draft_links_count = get_draft_links_count()
 
 @bp.route('/links/<int:id>')
 @templated('web/link/item.html')

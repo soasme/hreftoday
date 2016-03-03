@@ -1,13 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from flask import request, url_for
-from app.models import Link
+from flask import request, url_for, g
+from flask_login import current_user
+from app.models import Link, Draft
+
+def get_draft():
+    return Draft.query.filter_by(user_id=current_user.id).first() or Draft(
+        user_id=current_user.id
+    )
 
 def get_draft_link_ids():
-    return filter(None, request.args.getlist('_draft', type=int))
+    return get_draft().link_ids
 
 def get_draft_links():
     return Link.query.filter(Link.id.in_(get_draft_link_ids()))
+
+def get_draft_links_count():
+    draft = get_draft()
+    return len(set(draft.link_ids))
 
 def get_default_link_summary():
     links = get_draft_links()
