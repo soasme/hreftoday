@@ -48,6 +48,17 @@ def get_tag(id, tag):
 @transaction(db)
 @login_required
 def add_link():
+    link = Link(user_id=current_user.id)
+    return save_form_obj(
+        db, LinkForm, link,
+        build_next=lambda form, link: url_for('dashboard.get_link', id=link.id),
+    )
+
+@bp.route('/links/draft/add', methods=['GET', 'POST'])
+@templated('web/link/draft.html')
+@transaction(db)
+@login_required
+def add_draft():
     link = Link(
         user_id=current_user.id,
         summary=get_default_link_summary(),
@@ -56,6 +67,7 @@ def add_link():
     )
     def before_render(data):
         data['delete_draft'] = DeleteDraftLinkForm()
+        data['draft_links'] = _get_draft_links()
         return data
     return save_form_obj(
         db, LinkForm, link,
