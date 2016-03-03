@@ -35,12 +35,16 @@ def get_default_link_summary():
     return summary
 
 def get_default_url():
-    if request.args.getlist('_draft'):
-        link_ids = get_draft_link_ids()
+    link_ids = get_draft_link_ids()
+    if link_ids:
         return url_for('dashboard.get_draft_links', _draft=link_ids, _external=True)
+    else:
+        return url_for('dashboard.get_links')
 
 def get_default_title():
     link_ids = get_draft_link_ids()
     if link_ids:
         title = 'Draft - ' + ','.join([link.title for link in get_draft_links()])
         return title[:128]
+    else:
+        return ''
